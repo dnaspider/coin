@@ -32,6 +32,7 @@ Partial Class coin
         Me.S_ScrapeBegin = New System.Windows.Forms.TextBox()
         Me.S_ScrapeEnd = New System.Windows.Forms.TextBox()
         Me.S_Description = New System.Windows.Forms.TextBox()
+        Me.S_Log = New System.Windows.Forms.TextBox()
         Me.SuspendLayout()
         '
         'WebBrowser1
@@ -133,6 +134,19 @@ Partial Class coin
         Me.S_Description.Size = New System.Drawing.Size(321, 37)
         Me.S_Description.TabIndex = 6
         '
+        'S_Log
+        '
+        Me.S_Log.AcceptsReturn = True
+        Me.S_Log.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.S_Log.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.S_Log.ForeColor = System.Drawing.Color.Yellow
+        Me.S_Log.Location = New System.Drawing.Point(12, 397)
+        Me.S_Log.Multiline = True
+        Me.S_Log.Name = "S_Log"
+        Me.S_Log.Size = New System.Drawing.Size(321, 159)
+        Me.S_Log.TabIndex = 7
+        '
         'coin
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(19.0!, 37.0!)
@@ -140,6 +154,7 @@ Partial Class coin
         Me.BackColor = System.Drawing.Color.Black
         Me.ClientSize = New System.Drawing.Size(345, 74)
         Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.S_Log)
         Me.Controls.Add(Me.S_Description)
         Me.Controls.Add(Me.S_ScrapeEnd)
         Me.Controls.Add(Me.S_ScrapeBegin)
@@ -170,4 +185,5 @@ Partial Class coin
     Friend WithEvents S_ScrapeBegin As TextBox
     Friend WithEvents S_ScrapeEnd As TextBox
     Friend WithEvents S_Description As TextBox
+    Friend WithEvents S_Log As TextBox
 End Class

@@ -59,5 +59,9 @@
     <Setting Name="Description" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="Log" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Log
+</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -281,6 +281,18 @@ Namespace My
                 Me("Description") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Log"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))>  _
+        Public Property Log() As String
+            Get
+                Return CType(Me("Log"),String)
+            End Get
+            Set
+                Me("Log") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

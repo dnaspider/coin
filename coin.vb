@@ -14,6 +14,7 @@
         If My.Settings.ScrapeAfter > "" Then S_ScrapeAfter.Text = My.Settings.ScrapeAfter
         If My.Settings.ScrapeBegin > "" Then S_ScrapeBegin.Text = My.Settings.ScrapeBegin
         If My.Settings.ScrapeEnd > "" Then S_ScrapeEnd.Text = My.Settings.ScrapeEnd
+        S_Log.Text = My.Settings.Log
         If My.Settings.Description > "" Then S_Description.Text = My.Settings.Description
         If My.Settings.TimerFrequency > 0 Then Timer1.Interval = My.Settings.TimerFrequency
         If My.Settings.Frequency > 0 Then g_Frequency = My.Settings.Frequency
@@ -39,11 +40,13 @@
         S_ScrapeAfter.BackColor = RichTextBox1.BackColor
         S_ScrapeBegin.BackColor = RichTextBox1.BackColor
         S_ScrapeEnd.BackColor = RichTextBox1.BackColor
+        S_Log.BackColor = RichTextBox1.BackColor
         S_URL.ForeColor = RichTextBox1.ForeColor
         S_Description.ForeColor = RichTextBox1.ForeColor
         S_ScrapeAfter.ForeColor = RichTextBox1.ForeColor
         S_ScrapeBegin.ForeColor = RichTextBox1.ForeColor
         S_ScrapeEnd.ForeColor = RichTextBox1.ForeColor
+        S_Log.ForeColor = RichTextBox1.ForeColor
     End Sub
 
     Sub SaveSettings()
@@ -52,6 +55,7 @@
         My.Settings.ScrapeBegin = S_ScrapeBegin.Text
         My.Settings.ScrapeEnd = S_ScrapeEnd.Text
         My.Settings.Description = S_Description.Text
+        My.Settings.Log = S_Log.Text
         If g_Frequency > 0 Then My.Settings.Frequency = g_Frequency
         If Timer1.Interval > 0 Then My.Settings.TimerFrequency = Timer1.Interval
         My.Settings.TimerEnabled = Timer1.Enabled
@@ -116,7 +120,7 @@
         CopyColoro()
     End Sub
 
-    Private Sub RichTextBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles RichTextBox1.KeyPress, S_URL.KeyPress, S_ScrapeEnd.KeyPress, S_ScrapeBegin.KeyPress, S_ScrapeAfter.KeyPress, S_Description.KeyPress
+    Private Sub RichTextBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles RichTextBox1.KeyPress, S_URL.KeyPress, S_ScrapeEnd.KeyPress, S_ScrapeBegin.KeyPress, S_ScrapeAfter.KeyPress, S_Description.KeyPress, S_Log.KeyPress
         If GetAsyncKeyState(Keys.Enter) Then LoadWeb()
         If GetAsyncKeyState(Keys.T) Then
             ToggleTimer()
@@ -170,9 +174,25 @@
         Dim i = WebBrowser1.DocumentText.IndexOf(S_ScrapeBegin.Text, WebBrowser1.DocumentText.IndexOf(S_ScrapeAfter.Text))
         Dim p = WebBrowser1.DocumentText.IndexOf(S_ScrapeEnd.Text, i)
         RichTextBox1.Text = " " + WebBrowser1.DocumentText.Substring(i, p - i)
+        Logo()
+        g_i += 1
     End Sub
 
-    Private Sub RichTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyDown, S_URL.KeyDown, S_ScrapeEnd.KeyDown, S_ScrapeBegin.KeyDown, S_ScrapeAfter.KeyDown, S_Description.KeyDown
+    Sub Logo()
+        If S_Log.Text = "" Or S_Log.Text.StartsWith("'") Then Return
+        Dim h = Date.Now.Hour.ToString
+        Dim hh = CInt(h)
+        Dim m = "AM"
+        If CInt(h) = 0 Then hh += 12 Else If CInt(h) > 12 Then m = "PM" : hh -= 12
+        Dim s = Date.Now.Second.ToString
+        If s.Length = 1 Then s = "0" & s
+        Dim t = hh & ":" & Date.Now.Minute.ToString & ":" & s & ":" & m
+        Dim d = Date.Now.Month.ToString & "/" & Date.Now.Day.ToString & "/" & Date.Now.Year.ToString
+        S_Log.Text += d & " " & t & " " & RichTextBox1.Text & vbCrLf
+        S_Log.SelectionStart = S_Log.TextLength
+    End Sub
+
+    Private Sub RichTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyDown, S_URL.KeyDown, S_ScrapeEnd.KeyDown, S_ScrapeBegin.KeyDown, S_ScrapeAfter.KeyDown, S_Description.KeyDown, S_Log.KeyDown
         GetAsyncKeyState(Keys.LShiftKey)
         GetAsyncKeyState(Keys.LControlKey)
         If GetAsyncKeyState(Keys.D0) Then Coloro(Color.Lime)
@@ -192,6 +212,7 @@
             If S_ScrapeAfter.Focused Then q = 3
             If S_ScrapeBegin.Focused Then q = 4
             If S_ScrapeEnd.Focused Then q = 5
+            If S_Log.Focused Then q = 6
             Select Case q
                 Case 1
                     s = "Description"
@@ -203,6 +224,8 @@
                     s = "Scrape begin: IndexOf(""" + S_ScrapeBegin.Text + """)"
                 Case 5
                     s = "Scrape end: IndexOf(""" + S_ScrapeEnd.Text + """)"
+                Case 6
+                    s = "Log" + vbNewLine + vbNewLine + "Clear text or 'text:  Disable"
                 Case Else
                     s = "DOUBLE_CLICK or ENTER:" + vbNewLine + S_Description.Text + S_URL.Text +
                     vbNewLine + vbNewLine + "T:" + vbNewLine + "Toggle one minute timer on/off" +
@@ -213,11 +236,12 @@
                     vbNewLine + vbNewLine + "V:" + vbNewLine + "Position" +
                     vbNewLine + vbNewLine + "O:" + vbNewLine + "Options" +
                     vbNewLine + vbNewLine + "+/-:" + vbNewLine + "Opacity" +
-                    vbNewLine + vbNewLine + "ESC:" + vbNewLine + "Exit"
+                    vbNewLine + vbNewLine + "ESC:" + vbNewLine + "Exit" +
+                    vbNewLine + vbNewLine + "F1:" + vbNewLine + "?"
             End Select
             MsgBox(s, vbInformation, "coin.exe")
-            End If
-            If GetAsyncKeyState(Keys.Up) Then g_Frequency += 1
+        End If
+        If GetAsyncKeyState(Keys.Up) Then g_Frequency += 1
         If GetAsyncKeyState(Keys.Down) Then g_Frequency -= 1
         If GetAsyncKeyState(Keys.Escape) Then Me.Close()
         If GetAsyncKeyState(Keys.V) Then
