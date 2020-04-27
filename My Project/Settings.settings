@@ -56,5 +56,8 @@
     <Setting Name="MiscZoomLeft" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">-3</Value>
     </Setting>
+    <Setting Name="Description" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

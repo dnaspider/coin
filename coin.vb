@@ -1,10 +1,6 @@
 ﻿Public Class coin
     Private Declare Function GetAsyncKeyState Lib "user32.dll" (ByVal vKey As Int32) As UShort
 
-    Dim g_url = "https://www.coinbase.com/"
-    Dim g_ScrapeBegin = "$"
-    Dim g_ScrapeAfter = "BTC</h4>"
-    Dim g_ScrapeEnd = "<"
     Dim g_i = 0
     Dim g_Frequency = 180 '180*333ms=run 
     Dim g_zoom As Single
@@ -14,10 +10,11 @@
     Dim g_drag_y As Integer
 
     Sub LoadSettings()
-        g_url = My.Settings.URL
-        If My.Settings.ScrapeAfter > "" Then g_ScrapeAfter = My.Settings.ScrapeAfter
-        If My.Settings.ScrapeBegin > "" Then g_ScrapeBegin = My.Settings.ScrapeBegin
-        If My.Settings.ScrapeEnd > "" Then g_ScrapeEnd = My.Settings.ScrapeEnd
+        If My.Settings.URL > "" Then S_URL.Text = My.Settings.URL
+        If My.Settings.ScrapeAfter > "" Then S_ScrapeAfter.Text = My.Settings.ScrapeAfter
+        If My.Settings.ScrapeBegin > "" Then S_ScrapeBegin.Text = My.Settings.ScrapeBegin
+        If My.Settings.ScrapeEnd > "" Then S_ScrapeEnd.Text = My.Settings.ScrapeEnd
+        If My.Settings.Description > "" Then S_Description.Text = My.Settings.Description
         If My.Settings.TimerFrequency > 0 Then Timer1.Interval = My.Settings.TimerFrequency
         If My.Settings.Frequency > 0 Then g_Frequency = My.Settings.Frequency
         RichTextBox1.ZoomFactor = My.Settings.Zoom
@@ -33,13 +30,28 @@
         Width = My.Settings.Width
         Timer1.Enabled = My.Settings.TimerEnabled
         If Timer1.Enabled Then Label1.Visible = True
+        CopyColoro()
+    End Sub
+
+    Sub CopyColoro()
+        S_URL.BackColor = RichTextBox1.BackColor
+        S_Description.BackColor = RichTextBox1.BackColor
+        S_ScrapeAfter.BackColor = RichTextBox1.BackColor
+        S_ScrapeBegin.BackColor = RichTextBox1.BackColor
+        S_ScrapeEnd.BackColor = RichTextBox1.BackColor
+        S_URL.ForeColor = RichTextBox1.ForeColor
+        S_Description.ForeColor = RichTextBox1.ForeColor
+        S_ScrapeAfter.ForeColor = RichTextBox1.ForeColor
+        S_ScrapeBegin.ForeColor = RichTextBox1.ForeColor
+        S_ScrapeEnd.ForeColor = RichTextBox1.ForeColor
     End Sub
 
     Sub SaveSettings()
-        My.Settings.URL = g_url
-        My.Settings.ScrapeAfter = g_ScrapeAfter
-        My.Settings.ScrapeBegin = g_ScrapeBegin
-        My.Settings.ScrapeEnd = g_ScrapeEnd
+        My.Settings.URL = S_URL.Text
+        My.Settings.ScrapeAfter = S_ScrapeAfter.Text
+        My.Settings.ScrapeBegin = S_ScrapeBegin.Text
+        My.Settings.ScrapeEnd = S_ScrapeEnd.Text
+        My.Settings.Description = S_Description.Text
         If g_Frequency > 0 Then My.Settings.Frequency = g_Frequency
         If Timer1.Interval > 0 Then My.Settings.TimerFrequency = Timer1.Interval
         My.Settings.TimerEnabled = Timer1.Enabled
@@ -90,18 +102,21 @@
     End Sub
 
     Sub Coloro(c)
-        If GetAsyncKeyState(Keys.LShiftKey) Then
-            RichTextBox1.BackColor = c
-            Return
-        End If
-        If GetAsyncKeyState(Keys.LControlKey) Then
-            Label1.BackColor = c
-            Return
-        End If
-        RichTextBox1.ForeColor = c
+        Dim q = 0
+        If GetAsyncKeyState(Keys.LShiftKey) Then q = 1
+        If GetAsyncKeyState(Keys.LControlKey) Then q = 2
+        Select Case q
+            Case 1
+                RichTextBox1.BackColor = c
+            Case 2
+                Label1.BackColor = c
+            Case Else
+                RichTextBox1.ForeColor = c
+        End Select
+        CopyColoro()
     End Sub
 
-    Private Sub RichTextBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles RichTextBox1.KeyPress
+    Private Sub RichTextBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles RichTextBox1.KeyPress, S_URL.KeyPress, S_ScrapeEnd.KeyPress, S_ScrapeBegin.KeyPress, S_ScrapeAfter.KeyPress, S_Description.KeyPress
         If GetAsyncKeyState(Keys.Enter) Then LoadWeb()
         If GetAsyncKeyState(Keys.T) Then
             ToggleTimer()
@@ -116,7 +131,7 @@
     End Sub
 
     Sub LoadWeb()
-        WebBrowser1.Navigate(g_url)
+        WebBrowser1.Navigate(S_URL.Text)
         AddHandler(WebBrowser1.DocumentCompleted), AddressOf Run
         g_FromLoadWeb = 0
     End Sub
@@ -152,12 +167,12 @@
             RichTextBox1.Text = " Not connected"
             Exit Sub '<title>Navigation Canceled</title> <title>Can&rsquo;t reach this page</title>
         End If
-        Dim i = WebBrowser1.DocumentText.IndexOf(g_ScrapeBegin, WebBrowser1.DocumentText.IndexOf(g_ScrapeAfter))
-        Dim p = WebBrowser1.DocumentText.IndexOf(g_ScrapeEnd, i)
+        Dim i = WebBrowser1.DocumentText.IndexOf(S_ScrapeBegin.Text, WebBrowser1.DocumentText.IndexOf(S_ScrapeAfter.Text))
+        Dim p = WebBrowser1.DocumentText.IndexOf(S_ScrapeEnd.Text, i)
         RichTextBox1.Text = " " + WebBrowser1.DocumentText.Substring(i, p - i)
     End Sub
 
-    Private Sub RichTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyDown
+    Private Sub RichTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyDown, S_URL.KeyDown, S_ScrapeEnd.KeyDown, S_ScrapeBegin.KeyDown, S_ScrapeAfter.KeyDown, S_Description.KeyDown
         GetAsyncKeyState(Keys.LShiftKey)
         GetAsyncKeyState(Keys.LControlKey)
         If GetAsyncKeyState(Keys.D0) Then Coloro(Color.Lime)
@@ -171,18 +186,38 @@
         If GetAsyncKeyState(Keys.D8) Then Coloro(Color.DarkOrange)
         If GetAsyncKeyState(Keys.D9) Then Coloro(Color.Purple)
         If GetAsyncKeyState(Keys.F1) Then
-            MsgBox("DOUBLE_CLICK or ENTER:" + vbNewLine + "Get BTC price from " + g_url +
-               vbNewLine + vbNewLine + "T:" + vbNewLine + "Toggle one minute timer on/off" +
-               vbNewLine + vbNewLine + "CTRL + SCROLL_WHEEL:" + vbNewLine + "Font size" +
-               vbNewLine + vbNewLine + "0-9 (SHIFT or CTRL):" + vbNewLine + "Color" +
-               vbNewLine + vbNewLine + "A:" + vbNewLine + "Always on top" +
-               vbNewLine + vbNewLine + "Up/Down:" + vbNewLine + "Frequency" +
-               vbNewLine + vbNewLine + "V:" + vbNewLine + "Position" +
-               vbNewLine + vbNewLine + "O:" + vbNewLine + "Options" +
-               vbNewLine + vbNewLine + "+/-:" + vbNewLine + "Opacity" +
-            vbNewLine + vbNewLine + "ESC:" + vbNewLine + "Exit", vbInformation, "coin.exe")
-        End If
-        If GetAsyncKeyState(Keys.Up) Then g_Frequency += 1
+            Dim q = 0, s
+            If S_Description.Focused Then q = 1
+            If S_URL.Focused Then q = 2
+            If S_ScrapeAfter.Focused Then q = 3
+            If S_ScrapeBegin.Focused Then q = 4
+            If S_ScrapeEnd.Focused Then q = 5
+            Select Case q
+                Case 1
+                    s = "Description"
+                Case 2
+                    s = "Scrape: " + S_URL.Text
+                Case 3
+                    s = "Start scrape after: IndexOf(""" + S_ScrapeAfter.Text + """)"
+                Case 4
+                    s = "Scrape begin: IndexOf(""" + S_ScrapeBegin.Text + """)"
+                Case 5
+                    s = "Scrape end: IndexOf(""" + S_ScrapeEnd.Text + """)"
+                Case Else
+                    s = "DOUBLE_CLICK or ENTER:" + vbNewLine + S_Description.Text + S_URL.Text +
+                    vbNewLine + vbNewLine + "T:" + vbNewLine + "Toggle one minute timer on/off" +
+                    vbNewLine + vbNewLine + "CTRL + SCROLL_WHEEL:" + vbNewLine + "Font size" +
+                    vbNewLine + vbNewLine + "0-9 (SHIFT or CTRL):" + vbNewLine + "Color" +
+                    vbNewLine + vbNewLine + "A:" + vbNewLine + "Always on top" +
+                    vbNewLine + vbNewLine + "Up/Down:" + vbNewLine + "Frequency" +
+                    vbNewLine + vbNewLine + "V:" + vbNewLine + "Position" +
+                    vbNewLine + vbNewLine + "O:" + vbNewLine + "Options" +
+                    vbNewLine + vbNewLine + "+/-:" + vbNewLine + "Opacity" +
+                    vbNewLine + vbNewLine + "ESC:" + vbNewLine + "Exit"
+            End Select
+            MsgBox(s, vbInformation, "coin.exe")
+            End If
+            If GetAsyncKeyState(Keys.Up) Then g_Frequency += 1
         If GetAsyncKeyState(Keys.Down) Then g_Frequency -= 1
         If GetAsyncKeyState(Keys.Escape) Then Me.Close()
         If GetAsyncKeyState(Keys.V) Then
@@ -203,6 +238,11 @@
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+        S_URL.Text = "https://www.coinbase.com/"
+        S_ScrapeBegin.Text = "$"
+        S_ScrapeAfter.Text = "BTC</h4>"
+        S_ScrapeEnd.Text = "<"
+        S_Description.Text = "Get BTC price from "
         LoadSettings()
         WebBrowser1.ScriptErrorsSuppressed = True
         LoadWeb()
