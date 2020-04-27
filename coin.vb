@@ -184,9 +184,11 @@
         Dim hh = CInt(h)
         Dim m = "AM"
         If CInt(h) = 0 Then hh += 12 Else If CInt(h) > 12 Then m = "PM" : hh -= 12
+        Dim mi = Date.Now.Minute.ToString
+        If mi.Length = 1 Then mi = "0" & mi
         Dim s = Date.Now.Second.ToString
         If s.Length = 1 Then s = "0" & s
-        Dim t = hh & ":" & Date.Now.Minute.ToString & ":" & s & ":" & m
+        Dim t = hh & ":" & mi & ":" & s & ":" & m
         Dim d = Date.Now.Month.ToString & "/" & Date.Now.Day.ToString & "/" & Date.Now.Year.ToString
         S_Log.Text += d & " " & t & " " & RichTextBox1.Text & vbCrLf
         S_Log.SelectionStart = S_Log.TextLength
