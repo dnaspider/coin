@@ -25,7 +25,6 @@
 
     Private Sub RichTextBox1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles RichTextBox1.MouseDoubleClick
         g_zoom = RichTextBox1.ZoomFactor
-        RichTextBox1.Text = ""
         LoadWeb()
         RichTextBox1.ZoomFactor = g_zoom
     End Sub
@@ -67,7 +66,6 @@
             Label1.Left = RichTextBox1.Left + 3
             Timer1.Enabled = True
             Label1.Visible = True
-            RichTextBox1.Text = ""
         Else
             Timer1.Enabled = False
             Label1.Visible = False
@@ -80,7 +78,6 @@
         Else
             Me.FormBorderStyle = FormBorderStyle.None
         End If
-        If g_zoom > 0 Then RichTextBox1.ZoomFactor = g_zoom
     End Sub
 
     Sub Run()
@@ -111,7 +108,6 @@
             vbNewLine + vbNewLine + "ESC:" + vbNewLine + "Exit", vbInformation)
         End If
         If GetAsyncKeyState(Keys.Escape) Then Me.Close()
-        If GetAsyncKeyState(Keys.Control) Then g_zoom = RichTextBox1.ZoomFactor
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -119,8 +115,6 @@
         LoadWeb()
         Height = 15
         Width = 61
-        Timer1.Interval = 333
-        Timer1.Enabled = False
         Label1.Top = Me.Height - 1
     End Sub
 
@@ -129,5 +123,9 @@
         g_i += 1
         Label1.Width = g_i / g_frequency * Width
         If g_i > g_frequency Then g_i = 0
+    End Sub
+
+    Private Sub RichTextBox1_KeyUp(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyUp
+        If GetAsyncKeyState(Keys.LControlKey) Then g_zoom = RichTextBox1.ZoomFactor
     End Sub
 End Class
