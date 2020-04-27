@@ -73,7 +73,7 @@ Partial Class coin
         Me.Label1.Text = " "
         Me.Label1.Visible = False
         '
-        'Form1
+        'coin
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(19.0!, 37.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -87,7 +87,7 @@ Partial Class coin
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "Form1"
+        Me.Name = "coin"
         Me.Opacity = 0.75R
         Me.ShowIcon = False
         Me.Text = "Coin"

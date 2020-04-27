@@ -111,6 +111,8 @@
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+        'Top = Cursor.Position.Y
+        'Left = Cursor.Position.X
         WebBrowser1.ScriptErrorsSuppressed = True
         LoadWeb()
         Height = 15
@@ -126,6 +128,16 @@
     End Sub
 
     Private Sub RichTextBox1_KeyUp(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyUp
-        If GetAsyncKeyState(Keys.LControlKey) Then g_zoom = RichTextBox1.ZoomFactor
+        If GetAsyncKeyState(Keys.LControlKey) Then
+            g_zoom = RichTextBox1.ZoomFactor
+            Select Case g_zoom
+                Case > 4.5
+                    RichTextBox1.Left = -6
+                Case > 2.5
+                    RichTextBox1.Left = -5
+                Case Else
+                    RichTextBox1.Left = -3
+            End Select
+        End If
     End Sub
 End Class
