@@ -32,6 +32,7 @@
         Timer1.Enabled = My.Settings.TimerEnabled
         If Timer1.Enabled Then Label1.Visible = True
         CopyColoro()
+        ToggleOptionsV(False)
     End Sub
 
     Sub CopyColoro()
@@ -136,6 +137,7 @@
 
     Sub LoadWeb()
         WebBrowser1.Navigate(S_URL.Text)
+        g_i += 1
         AddHandler(WebBrowser1.DocumentCompleted), AddressOf Run
         g_FromLoadWeb = 0
     End Sub
@@ -151,11 +153,23 @@
         Label1.Left = 0
     End Sub
 
+    Sub ToggleOptionsV(b)
+        If b = True Then b = 1 Else b = 0
+        S_URL.Visible = b
+        S_Description.Visible = b
+        S_ScrapeAfter.Visible = b
+        S_ScrapeBegin.Visible = b
+        S_ScrapeEnd.Visible = b
+        S_Log.Visible = b
+    End Sub
+
     Sub ToggleOptions()
         If Me.FormBorderStyle = FormBorderStyle.None Then
             Me.FormBorderStyle = FormBorderStyle.Sizable
+            ToggleOptionsV(True)
         Else
             Me.FormBorderStyle = FormBorderStyle.None
+            ToggleOptionsV(False)
         End If
     End Sub
 
@@ -175,7 +189,6 @@
         Dim p = WebBrowser1.DocumentText.IndexOf(S_ScrapeEnd.Text, i)
         RichTextBox1.Text = " " + WebBrowser1.DocumentText.Substring(i, p - i)
         Logo()
-        g_i += 1
     End Sub
 
     Sub Logo()
