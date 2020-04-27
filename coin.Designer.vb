@@ -45,7 +45,7 @@ Partial Class coin
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.RichTextBox1.BackColor = System.Drawing.Color.Black
         Me.RichTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.RichTextBox1.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.RichTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.RichTextBox1.DetectUrls = False
         Me.RichTextBox1.ForeColor = System.Drawing.Color.Red
         Me.RichTextBox1.Location = New System.Drawing.Point(-10, 0)
@@ -66,7 +66,7 @@ Partial Class coin
         Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label1.BackColor = System.Drawing.Color.Lime
         Me.Label1.ForeColor = System.Drawing.Color.Black
-        Me.Label1.Location = New System.Drawing.Point(16, 53)
+        Me.Label1.Location = New System.Drawing.Point(-3, 54)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(1, 2)
         Me.Label1.TabIndex = 2
@@ -82,7 +82,7 @@ Partial Class coin
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.RichTextBox1)
         Me.Controls.Add(Me.WebBrowser1)
-        Me.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Cursor = System.Windows.Forms.Cursors.Default
         Me.ForeColor = System.Drawing.Color.White
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.MaximizeBox = False

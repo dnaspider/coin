@@ -43,6 +43,18 @@
         If MouseButtons = Windows.Forms.MouseButtons.Left Then DragForm()
     End Sub
 
+    Sub Coloro(c)
+        If GetAsyncKeyState(Keys.LShiftKey) Then
+            RichTextBox1.BackColor = c
+            Return
+        End If
+        If GetAsyncKeyState(Keys.LControlKey) Then
+            Label1.BackColor = c
+            Return
+        End If
+        RichTextBox1.ForeColor = c
+    End Sub
+
     Private Sub RichTextBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles RichTextBox1.KeyPress
         If GetAsyncKeyState(Keys.Enter) Then LoadWeb()
         If GetAsyncKeyState(Keys.T) Then
@@ -53,6 +65,8 @@
         If GetAsyncKeyState(Keys.A) Then
             If Not TopMost Then TopMost = True Else TopMost = False
         End If
+        If GetAsyncKeyState(Keys.Oemplus) Then Opacity += 0.1
+        If GetAsyncKeyState(Keys.OemMinus) Then Opacity -= 0.1
     End Sub
 
     Sub LoadWeb()
@@ -63,13 +77,14 @@
 
     Sub ToggleTimer()
         If Not Timer1.Enabled Then
-            Label1.Left = RichTextBox1.Left + 3
+            'Label1.Left = RichTextBox1.Left + 2
             Timer1.Enabled = True
             Label1.Visible = True
         Else
             Timer1.Enabled = False
             Label1.Visible = False
         End If
+        Label1.Left = 0
     End Sub
 
     Sub ToggleOptions()
@@ -99,35 +114,34 @@
     End Sub
 
     Private Sub RichTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyDown
+        GetAsyncKeyState(Keys.LShiftKey)
+        GetAsyncKeyState(Keys.LControlKey)
+        If GetAsyncKeyState(Keys.D0) Then Coloro(Color.Lime)
+        If GetAsyncKeyState(Keys.D1) Then Coloro(Color.Red)
+        If GetAsyncKeyState(Keys.D2) Then Coloro(Color.White)
+        If GetAsyncKeyState(Keys.D3) Then Coloro(Color.Blue)
+        If GetAsyncKeyState(Keys.D4) Then Coloro(Color.Black)
+        If GetAsyncKeyState(Keys.D5) Then Coloro(Color.Cyan)
+        If GetAsyncKeyState(Keys.D6) Then Coloro(Color.DarkCyan)
+        If GetAsyncKeyState(Keys.D7) Then Coloro(Color.HotPink)
+        If GetAsyncKeyState(Keys.D8) Then Coloro(Color.DarkOrange)
+        If GetAsyncKeyState(Keys.D9) Then Coloro(Color.Purple)
         If GetAsyncKeyState(Keys.F1) Then
             MsgBox("DOUBLE_CLICK or ENTER:" + vbNewLine + "Get BTC price from " + g_url +
                vbNewLine + vbNewLine + "T:" + vbNewLine + "Toggle one minute timer on/off" +
                vbNewLine + vbNewLine + "CTRL + SCROLL_WHEEL:" + vbNewLine + "Font size" +
+               vbNewLine + vbNewLine + "0-9 (SHIFT or CTRL):" + vbNewLine + "Color" +
                vbNewLine + vbNewLine + "A:" + vbNewLine + "Always on top" +
+               vbNewLine + vbNewLine + "V:" + vbNewLine + "Position" +
                vbNewLine + vbNewLine + "O:" + vbNewLine + "Options" +
+               vbNewLine + vbNewLine + "+/-:" + vbNewLine + "Opacity" +
             vbNewLine + vbNewLine + "ESC:" + vbNewLine + "Exit", vbInformation)
         End If
         If GetAsyncKeyState(Keys.Escape) Then Me.Close()
-    End Sub
-
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
-        'Top = Cursor.Position.Y
-        'Left = Cursor.Position.X
-        WebBrowser1.ScriptErrorsSuppressed = True
-        LoadWeb()
-        Height = 15
-        Width = 61
-        Label1.Top = Me.Height - 1
-    End Sub
-
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        If g_i = 0 Then LoadWeb()
-        g_i += 1
-        Label1.Width = g_i / g_frequency * Width
-        If g_i > g_frequency Then g_i = 0
-    End Sub
-
-    Private Sub RichTextBox1_KeyUp(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyUp
+        If GetAsyncKeyState(Keys.V) Then
+            Top = Cursor.Position.Y - Me.Height
+            Left = Cursor.Position.X - Me.Width
+        End If
         If GetAsyncKeyState(Keys.LControlKey) Then
             g_zoom = RichTextBox1.ZoomFactor
             Select Case g_zoom
@@ -139,5 +153,22 @@
                     RichTextBox1.Left = -3
             End Select
         End If
+    End Sub
+
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+        WebBrowser1.ScriptErrorsSuppressed = True
+        LoadWeb()
+        Height = 15
+        Width = 61
+        RichTextBox1.Width += 10
+        RichTextBox1.Height += 10
+        Label1.Top = Me.Height - 1
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        If g_i = 0 Then LoadWeb()
+        g_i += 1
+        Label1.Width = g_i / g_frequency * Me.Width
+        If g_i > g_frequency Then g_i = 0
     End Sub
 End Class
