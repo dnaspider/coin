@@ -3,7 +3,7 @@
 
     ReadOnly g_url = "https://www.coinbase.com/"
     Dim g_i = 0
-    ReadOnly g_frequency = 180 '180*ms=run 
+    Dim g_frequency = 180 '180*ms=run 
     Dim g_zoom As Single
     Dim g_FromLoadWeb = 0
     Dim g_drag As Boolean
@@ -132,11 +132,14 @@
                vbNewLine + vbNewLine + "CTRL + SCROLL_WHEEL:" + vbNewLine + "Font size" +
                vbNewLine + vbNewLine + "0-9 (SHIFT or CTRL):" + vbNewLine + "Color" +
                vbNewLine + vbNewLine + "A:" + vbNewLine + "Always on top" +
+               vbNewLine + vbNewLine + "Up/Down:" + vbNewLine + "Frequency" +
                vbNewLine + vbNewLine + "V:" + vbNewLine + "Position" +
                vbNewLine + vbNewLine + "O:" + vbNewLine + "Options" +
                vbNewLine + vbNewLine + "+/-:" + vbNewLine + "Opacity" +
-            vbNewLine + vbNewLine + "ESC:" + vbNewLine + "Exit", vbInformation)
+            vbNewLine + vbNewLine + "ESC:" + vbNewLine + "Exit", vbInformation, "coin.exe")
         End If
+        If GetAsyncKeyState(Keys.Up) Then g_frequency += 1
+        If GetAsyncKeyState(Keys.Down) Then g_frequency -= 1
         If GetAsyncKeyState(Keys.Escape) Then Me.Close()
         If GetAsyncKeyState(Keys.V) Then
             Top = Cursor.Position.Y - Me.Height
