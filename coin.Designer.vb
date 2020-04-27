@@ -53,7 +53,7 @@ Partial Class coin
         Me.RichTextBox1.Name = "RichTextBox1"
         Me.RichTextBox1.ReadOnly = True
         Me.RichTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
-        Me.RichTextBox1.Size = New System.Drawing.Size(345, 74)
+        Me.RichTextBox1.Size = New System.Drawing.Size(355, 84)
         Me.RichTextBox1.TabIndex = 1
         Me.RichTextBox1.Text = " F1:  About"
         '

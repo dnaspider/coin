@@ -1,7 +1,60 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" UseMySettingsClassName="true">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="URL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://www.coinbase.com/</Value>
+    </Setting>
+    <Setting Name="ScrapeAfter" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BTC&lt;/h4&gt;</Value>
+    </Setting>
+    <Setting Name="ScrapeBegin" Type="System.String" Scope="User">
+      <Value Profile="(Default)">$</Value>
+    </Setting>
+    <Setting Name="ScrapeEnd" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;</Value>
+    </Setting>
+    <Setting Name="Frequency" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">180</Value>
+    </Setting>
+    <Setting Name="TimerFrequency" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">333</Value>
+    </Setting>
+    <Setting Name="Zoom" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="TextColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Red</Value>
+    </Setting>
+    <Setting Name="BackgroundColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Black</Value>
+    </Setting>
+    <Setting Name="BarColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">LimeGreen</Value>
+    </Setting>
+    <Setting Name="Opacity" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.75</Value>
+    </Setting>
+    <Setting Name="TopMost" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Top" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Left" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Height" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="Width" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">61</Value>
+    </Setting>
+    <Setting Name="TimerEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="MiscZoomLeft" Type="System.Int16" Scope="User">
+      <Value Profile="(Default)">-3</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

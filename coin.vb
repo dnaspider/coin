@@ -1,14 +1,60 @@
 ﻿Public Class coin
     Private Declare Function GetAsyncKeyState Lib "user32.dll" (ByVal vKey As Int32) As UShort
 
-    ReadOnly g_url = "https://www.coinbase.com/"
+    Dim g_url = "https://www.coinbase.com/"
+    Dim g_ScrapeBegin = "$"
+    Dim g_ScrapeAfter = "BTC</h4>"
+    Dim g_ScrapeEnd = "<"
     Dim g_i = 0
-    Dim g_frequency = 180 '180*ms=run 
+    Dim g_Frequency = 180 '180*333ms=run 
     Dim g_zoom As Single
     Dim g_FromLoadWeb = 0
     Dim g_drag As Boolean
     Dim g_drag_x As Integer
     Dim g_drag_y As Integer
+
+    Sub LoadSettings()
+        g_url = My.Settings.URL
+        If My.Settings.ScrapeAfter > "" Then g_ScrapeAfter = My.Settings.ScrapeAfter
+        If My.Settings.ScrapeBegin > "" Then g_ScrapeBegin = My.Settings.ScrapeBegin
+        If My.Settings.ScrapeEnd > "" Then g_ScrapeEnd = My.Settings.ScrapeEnd
+        If My.Settings.TimerFrequency > 0 Then Timer1.Interval = My.Settings.TimerFrequency
+        If My.Settings.Frequency > 0 Then g_Frequency = My.Settings.Frequency
+        RichTextBox1.ZoomFactor = My.Settings.Zoom
+        RichTextBox1.ForeColor = My.Settings.TextColor
+        RichTextBox1.BackColor = My.Settings.BackgroundColor
+        RichTextBox1.Left = My.Settings.MiscZoomLeft
+        Label1.BackColor = My.Settings.BarColor
+        Opacity = My.Settings.Opacity
+        TopMost = My.Settings.TopMost
+        Top = My.Settings.Top
+        Left = My.Settings.Left
+        Height = My.Settings.Height
+        Width = My.Settings.Width
+        Timer1.Enabled = My.Settings.TimerEnabled
+        If Timer1.Enabled Then Label1.Visible = True
+    End Sub
+
+    Sub SaveSettings()
+        My.Settings.URL = g_url
+        My.Settings.ScrapeAfter = g_ScrapeAfter
+        My.Settings.ScrapeBegin = g_ScrapeBegin
+        My.Settings.ScrapeEnd = g_ScrapeEnd
+        If g_Frequency > 0 Then My.Settings.Frequency = g_Frequency
+        If Timer1.Interval > 0 Then My.Settings.TimerFrequency = Timer1.Interval
+        My.Settings.TimerEnabled = Timer1.Enabled
+        My.Settings.Zoom = RichTextBox1.ZoomFactor
+        My.Settings.TextColor = RichTextBox1.ForeColor
+        My.Settings.BackgroundColor = RichTextBox1.BackColor
+        My.Settings.MiscZoomLeft = RichTextBox1.Left
+        My.Settings.BarColor = Label1.BackColor
+        My.Settings.Opacity = Opacity
+        My.Settings.TopMost = TopMost
+        My.Settings.Top = Top
+        My.Settings.Left = Left
+        My.Settings.Height = Height
+        My.Settings.Width = Width
+    End Sub
 
     Sub DragFormInit()
         g_drag = True
@@ -77,7 +123,6 @@
 
     Sub ToggleTimer()
         If Not Timer1.Enabled Then
-            'Label1.Left = RichTextBox1.Left + 2
             Timer1.Enabled = True
             Label1.Visible = True
         Else
@@ -107,9 +152,8 @@
             RichTextBox1.Text = " Not connected"
             Exit Sub '<title>Navigation Canceled</title> <title>Can&rsquo;t reach this page</title>
         End If
-
-        Dim i = WebBrowser1.DocumentText.IndexOf("$", WebBrowser1.DocumentText.IndexOf("BTC</h4>"))
-        Dim p = WebBrowser1.DocumentText.IndexOf("<", i)
+        Dim i = WebBrowser1.DocumentText.IndexOf(g_ScrapeBegin, WebBrowser1.DocumentText.IndexOf(g_ScrapeAfter))
+        Dim p = WebBrowser1.DocumentText.IndexOf(g_ScrapeEnd, i)
         RichTextBox1.Text = " " + WebBrowser1.DocumentText.Substring(i, p - i)
     End Sub
 
@@ -138,8 +182,8 @@
                vbNewLine + vbNewLine + "+/-:" + vbNewLine + "Opacity" +
             vbNewLine + vbNewLine + "ESC:" + vbNewLine + "Exit", vbInformation, "coin.exe")
         End If
-        If GetAsyncKeyState(Keys.Up) Then g_frequency += 1
-        If GetAsyncKeyState(Keys.Down) Then g_frequency -= 1
+        If GetAsyncKeyState(Keys.Up) Then g_Frequency += 1
+        If GetAsyncKeyState(Keys.Down) Then g_Frequency -= 1
         If GetAsyncKeyState(Keys.Escape) Then Me.Close()
         If GetAsyncKeyState(Keys.V) Then
             Top = Cursor.Position.Y - Me.Height
@@ -159,19 +203,22 @@
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+        LoadSettings()
         WebBrowser1.ScriptErrorsSuppressed = True
         LoadWeb()
-        Height = 15
-        Width = 61
+        Label1.Top = Me.Height - 1
         RichTextBox1.Width += 10
         RichTextBox1.Height += 10
-        Label1.Top = Me.Height - 1
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         If g_i = 0 Then LoadWeb()
         g_i += 1
-        Label1.Width = g_i / g_frequency * Me.Width
-        If g_i > g_frequency Then g_i = 0
+        Label1.Width = g_i / g_Frequency * Me.Width '180*333ms=run 
+        If g_i > g_Frequency Then g_i = 0
+    End Sub
+
+    Private Sub coin_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        SaveSettings()
     End Sub
 End Class
