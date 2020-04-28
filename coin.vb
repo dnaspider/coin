@@ -10,6 +10,13 @@
     Dim g_drag_y As Integer
 
     Sub LoadSettings()
+        If My.Settings.Sizeable Then Me.FormBorderStyle = FormBorderStyle.Sizable Else Me.FormBorderStyle = FormBorderStyle.None
+        If My.Settings.Icon > "" Then
+            Me.Icon = New Icon(My.Settings.Icon)
+            Me.ShowIcon = True
+            Me.Icon = Me.Icon
+        End If
+        Text = My.Settings.Title
         If My.Settings.URL > "" Then S_URL.Text = My.Settings.URL
         If My.Settings.ScrapeAfter > "" Then S_ScrapeAfter.Text = My.Settings.ScrapeAfter
         If My.Settings.ScrapeBegin > "" Then S_ScrapeBegin.Text = My.Settings.ScrapeBegin
@@ -30,9 +37,10 @@
         Height = My.Settings.Height
         Width = My.Settings.Width
         Timer1.Enabled = My.Settings.TimerEnabled
-        If Timer1.Enabled Then Label1.Visible = True
+        If Timer1.Enabled And My.Settings.ShowBar Then Label1.Visible = True
         CopyColoro()
         ToggleOptionsV(False)
+        If My.Settings.FirstRun = True Then F1_MessageBox()
     End Sub
 
     Sub CopyColoro()
@@ -71,6 +79,10 @@
         My.Settings.Left = Left
         My.Settings.Height = Height
         My.Settings.Width = Width
+        If Me.FormBorderStyle = FormBorderStyle.Sizable Then My.Settings.Sizeable = True Else My.Settings.Sizeable = False
+        My.Settings.Icon = My.Settings.Icon
+        My.Settings.FirstRun = False
+        My.Settings.Title = My.Settings.Title
     End Sub
 
     Sub DragFormInit()
@@ -87,9 +99,7 @@
     End Sub
 
     Private Sub RichTextBox1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles RichTextBox1.MouseDoubleClick
-        g_zoom = RichTextBox1.ZoomFactor
         LoadWeb()
-        RichTextBox1.ZoomFactor = g_zoom
     End Sub
 
     Private Sub Form1_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown, RichTextBox1.MouseDown
@@ -145,7 +155,7 @@
     Sub ToggleTimer()
         If Not Timer1.Enabled Then
             Timer1.Enabled = True
-            Label1.Visible = True
+            If My.Settings.ShowBar Then Label1.Visible = True
         Else
             Timer1.Enabled = False
             Label1.Visible = False
@@ -166,6 +176,10 @@
     Sub ToggleOptions()
         If Me.FormBorderStyle = FormBorderStyle.None Then
             Me.FormBorderStyle = FormBorderStyle.Sizable
+            If My.Settings.Icon > "" Then
+                Me.ShowIcon = True
+                Me.Icon = Me.Icon
+            End If
             ToggleOptionsV(True)
         Else
             Me.FormBorderStyle = FormBorderStyle.None
@@ -183,11 +197,14 @@
         If WebBrowser1.DocumentText.IndexOf("<title>N") > 0 Or WebBrowser1.DocumentText.IndexOf("ge</title>") > 0 Then
             If Width < 76 Then Width = 76
             RichTextBox1.Text = " Not connected"
+            Logo()
             Exit Sub '<title>Navigation Canceled</title> <title>Can&rsquo;t reach this page</title>
         End If
+
         Dim i = WebBrowser1.DocumentText.IndexOf(S_ScrapeBegin.Text, WebBrowser1.DocumentText.IndexOf(S_ScrapeAfter.Text))
         Dim p = WebBrowser1.DocumentText.IndexOf(S_ScrapeEnd.Text, i)
         RichTextBox1.Text = " " + WebBrowser1.DocumentText.Substring(i, p - i)
+
         Logo()
     End Sub
 
@@ -203,8 +220,51 @@
         If s.Length = 1 Then s = "0" & s
         Dim t = hh & ":" & mi & ":" & s & ":" & m
         Dim d = Date.Now.Month.ToString & "/" & Date.Now.Day.ToString & "/" & Date.Now.Year.ToString
-        S_Log.Text += d & " " & t & " " & RichTextBox1.Text & vbCrLf
-        S_Log.SelectionStart = S_Log.TextLength
+        S_Log.AppendText(d & " " & t & RichTextBox1.Text & vbCrLf)
+    End Sub
+
+    Sub F1_MessageBox()
+        Dim q = 0, s
+        If S_Description.Focused Then q = 1
+        If S_URL.Focused Then q = 2
+        If S_ScrapeAfter.Focused Then q = 3
+        If S_ScrapeBegin.Focused Then q = 4
+        If S_ScrapeEnd.Focused Then q = 5
+        If S_Log.Focused Then q = 6
+        Select Case q
+            Case 1
+                s = "Description"
+            Case 2
+                s = "Scrape: " + S_URL.Text
+            Case 3
+                s = "Start scrape after: IndexOf(""" + S_ScrapeAfter.Text + """)"
+            Case 4
+                s = "Scrape begin: IndexOf(""" + S_ScrapeBegin.Text + """)"
+            Case 5
+                s = "Scrape end: IndexOf(""" + S_ScrapeEnd.Text + """)"
+            Case 6
+                s = "Log" + vbNewLine + vbNewLine + "Clear text or 'text:  Disable"
+            Case Else
+                s = "Scrape:" + vbTab + vbTab + vbTab + S_URL.Text +
+                vbNewLine + "Scrape after (IndexOf):" + vbTab + S_ScrapeAfter.Text +
+                vbNewLine + "Scrape begin:" + vbTab + vbTab + S_ScrapeBegin.Text +
+                vbNewLine + "Scrape end:" + vbTab + vbTab + S_ScrapeEnd.Text +
+                vbNewLine + "Description:" + vbTab + vbTab + S_Description.Text +
+                vbNewLine + vbNewLine + "DOUBLE_CLICK or ENTER:" + vbTab + "Run" +
+                vbNewLine + "T:" + vbTab + vbTab + vbTab + "Toggle timer on/off" + " (" + My.Settings.TimerFrequency.ToString + "ms)" +
+                vbNewLine + "UP/DOWN:" + vbTab + vbTab + "+/- Frequency (" + My.Settings.Frequency.ToString + ")" +
+                vbNewLine + "O:" + vbTab + vbTab + vbTab + "Options" +
+                vbNewLine + "CTRL + SCROLL_WHEEL:" + vbTab + "Font size" +
+                vbNewLine + "0-9 (SHIFT or CTRL):" + vbTab + "Color" +
+                vbNewLine + "A:" + vbTab + vbTab + vbTab + "Toggle always on top" +
+                vbNewLine + "V:" + vbTab + vbTab + vbTab + "Position" +
+                vbNewLine + "+/-:" + vbTab + vbTab + vbTab + "Opacity" +
+                vbNewLine + "ESC:" + vbTab + vbTab + vbTab + "Exit" +
+                vbNewLine + "F1:" + vbTab + vbTab + vbTab + "?" +
+                vbNewLine + vbNewLine + "Settings:" + vbTab + vbTab + vbTab + "C:\Users\..\AppData\Local\coin\..\..\user.config" +
+                vbNewLine + "Reset:" + vbTab + vbTab + vbTab + "Delete coin folder (C:\Users\..\AppData\Local\coin)"
+        End Select
+        MsgBox(s, vbInformation, My.Settings.Title)
     End Sub
 
     Private Sub RichTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyDown, S_URL.KeyDown, S_ScrapeEnd.KeyDown, S_ScrapeBegin.KeyDown, S_ScrapeAfter.KeyDown, S_Description.KeyDown, S_Log.KeyDown
@@ -220,42 +280,7 @@
         If GetAsyncKeyState(Keys.D7) Then Coloro(Color.HotPink)
         If GetAsyncKeyState(Keys.D8) Then Coloro(Color.DarkOrange)
         If GetAsyncKeyState(Keys.D9) Then Coloro(Color.Purple)
-        If GetAsyncKeyState(Keys.F1) Then
-            Dim q = 0, s
-            If S_Description.Focused Then q = 1
-            If S_URL.Focused Then q = 2
-            If S_ScrapeAfter.Focused Then q = 3
-            If S_ScrapeBegin.Focused Then q = 4
-            If S_ScrapeEnd.Focused Then q = 5
-            If S_Log.Focused Then q = 6
-            Select Case q
-                Case 1
-                    s = "Description"
-                Case 2
-                    s = "Scrape: " + S_URL.Text
-                Case 3
-                    s = "Start scrape after: IndexOf(""" + S_ScrapeAfter.Text + """)"
-                Case 4
-                    s = "Scrape begin: IndexOf(""" + S_ScrapeBegin.Text + """)"
-                Case 5
-                    s = "Scrape end: IndexOf(""" + S_ScrapeEnd.Text + """)"
-                Case 6
-                    s = "Log" + vbNewLine + vbNewLine + "Clear text or 'text:  Disable"
-                Case Else
-                    s = "DOUBLE_CLICK or ENTER:" + vbNewLine + S_Description.Text + S_URL.Text +
-                    vbNewLine + vbNewLine + "T:" + vbNewLine + "Toggle one minute timer on/off" +
-                    vbNewLine + vbNewLine + "CTRL + SCROLL_WHEEL:" + vbNewLine + "Font size" +
-                    vbNewLine + vbNewLine + "0-9 (SHIFT or CTRL):" + vbNewLine + "Color" +
-                    vbNewLine + vbNewLine + "A:" + vbNewLine + "Always on top" +
-                    vbNewLine + vbNewLine + "Up/Down:" + vbNewLine + "Frequency" +
-                    vbNewLine + vbNewLine + "V:" + vbNewLine + "Position" +
-                    vbNewLine + vbNewLine + "O:" + vbNewLine + "Options" +
-                    vbNewLine + vbNewLine + "+/-:" + vbNewLine + "Opacity" +
-                    vbNewLine + vbNewLine + "ESC:" + vbNewLine + "Exit" +
-                    vbNewLine + vbNewLine + "F1:" + vbNewLine + "?"
-            End Select
-            MsgBox(s, vbInformation, "coin.exe")
-        End If
+        If GetAsyncKeyState(Keys.F1) Then F1_MessageBox()
         If GetAsyncKeyState(Keys.Up) Then g_Frequency += 1
         If GetAsyncKeyState(Keys.Down) Then g_Frequency -= 1
         If GetAsyncKeyState(Keys.Escape) Then Me.Close()
@@ -281,7 +306,7 @@
         S_ScrapeBegin.Text = "$"
         S_ScrapeAfter.Text = "BTC</h4>"
         S_ScrapeEnd.Text = "<"
-        S_Description.Text = "Get BTC price from "
+        S_Description.Text = "Get BTC price"
         LoadSettings()
         WebBrowser1.ScriptErrorsSuppressed = True
         LoadWeb()

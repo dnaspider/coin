@@ -284,6 +284,42 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property Sizeable() As Boolean
+            Get
+                Return CType(Me("Sizeable"),Boolean)
+            End Get
+            Set
+                Me("Sizeable") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("coin")>  _
+        Public Property Title() As String
+            Get
+                Return CType(Me("Title"),String)
+            End Get
+            Set
+                Me("Title") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property Icon() As String
+            Get
+                Return CType(Me("Icon"),String)
+            End Get
+            Set
+                Me("Icon") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("Log"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10))>  _
         Public Property Log() As String
             Get
@@ -291,6 +327,30 @@ Namespace My
             End Get
             Set
                 Me("Log") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property FirstRun() As Boolean
+            Get
+                Return CType(Me("FirstRun"),Boolean)
+            End Get
+            Set
+                Me("FirstRun") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property ShowBar() As Boolean
+            Get
+                Return CType(Me("ShowBar"),Boolean)
+            End Get
+            Set
+                Me("ShowBar") = value
             End Set
         End Property
     End Class
