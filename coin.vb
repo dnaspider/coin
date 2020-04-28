@@ -252,7 +252,7 @@
                 vbNewLine + "Description:" + vbTab + vbTab + S_Description.Text +
                 vbNewLine + vbNewLine + "DOUBLE_CLICK or ENTER:" + vbTab + "Run" +
                 vbNewLine + "T:" + vbTab + vbTab + vbTab + "Toggle timer on/off" + " (" + My.Settings.TimerFrequency.ToString + "ms)" +
-                vbNewLine + "UP/DOWN:" + vbTab + vbTab + "+/- Frequency (" + My.Settings.Frequency.ToString + ")" +
+                vbNewLine + "UP/DOWN:" + vbTab + vbTab + "+/- Frequency (" + g_Frequency.ToString + ")" +
                 vbNewLine + "O:" + vbTab + vbTab + vbTab + "Options" +
                 vbNewLine + "CTRL + SCROLL_WHEEL:" + vbTab + "Font size" +
                 vbNewLine + "0-9 (SHIFT or CTRL):" + vbTab + "Color" +
