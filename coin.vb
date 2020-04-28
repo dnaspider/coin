@@ -251,7 +251,7 @@
                 vbNewLine + "Scrape end:" + vbTab + vbTab + S_ScrapeEnd.Text +
                 vbNewLine + "Description:" + vbTab + vbTab + S_Description.Text +
                 vbNewLine + vbNewLine + "DOUBLE_CLICK or ENTER:" + vbTab + "Run" +
-                vbNewLine + "T:" + vbTab + vbTab + vbTab + "Toggle timer on/off" + " (" + My.Settings.TimerFrequency.ToString + "ms)" +
+                vbNewLine + "T:" + vbTab + vbTab + vbTab + "Toggle timer on/off" + " (" + Timer1.Enabled.ToString + ", " + My.Settings.TimerFrequency.ToString + "ms)" +
                 vbNewLine + "UP/DOWN:" + vbTab + vbTab + "+/- Frequency (" + g_Frequency.ToString + ")" +
                 vbNewLine + "O:" + vbTab + vbTab + vbTab + "Options" +
                 vbNewLine + "CTRL + SCROLL_WHEEL:" + vbTab + "Font size" +
@@ -310,7 +310,7 @@
         LoadSettings()
         WebBrowser1.ScriptErrorsSuppressed = True
         LoadWeb()
-        Label1.Top = Me.Height - 1
+        If FormBorderStyle = BorderStyle.None Then Label1.Top = Me.Height - 1 Else Label1.Top = Me.Height - 40
         RichTextBox1.Width += 10
         RichTextBox1.Height += 10
     End Sub
