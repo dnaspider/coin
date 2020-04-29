@@ -43,6 +43,7 @@ Public Class coin
         If Timer1.Enabled And My.Settings.ShowBar Then Label1.Visible = True
         CopyColoro()
         If FormBorderStyle = BorderStyle.None Then Label1.Top = Me.Height - 1 Else Label1.Top = Me.Height - 40
+        RichTextBox1.Width = Me.Width - RichTextBox1.Left
         If My.Settings.FirstRun = True Then F1_MessageBox()
     End Sub
 
@@ -162,7 +163,6 @@ Public Class coin
         Catch ex As Exception
             RichTextBox1.Text = " Not connected"
             If Width < 76 Then Width = 76
-            RichTextBox1.Text = " Not connected"
             Logo()
             g_i += 1
             Exit Sub
