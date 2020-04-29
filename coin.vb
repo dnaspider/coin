@@ -1,10 +1,12 @@
-﻿Public Class coin
+﻿Imports System.Net
+Imports System.IO
+
+Public Class coin
     Private Declare Function GetAsyncKeyState Lib "user32.dll" (ByVal vKey As Int32) As UShort
 
     Dim g_i = 0
     Dim g_Frequency = 180 '180*333ms=run 
     Dim g_zoom As Single
-    Dim g_FromLoadWeb = 0
     Dim g_drag As Boolean
     Dim g_drag_x As Integer
     Dim g_drag_y As Integer
@@ -22,6 +24,7 @@
         If My.Settings.ScrapeBegin > "" Then S_ScrapeBegin.Text = My.Settings.ScrapeBegin
         If My.Settings.ScrapeEnd > "" Then S_ScrapeEnd.Text = My.Settings.ScrapeEnd
         S_Log.Text = My.Settings.Log
+        If My.Settings.LogWordWrap Then RichTextBox1.WordWrap = True Else RichTextBox1.WordWrap = False
         If My.Settings.Description > "" Then S_Description.Text = My.Settings.Description
         If My.Settings.TimerFrequency > 0 Then Timer1.Interval = My.Settings.TimerFrequency
         If My.Settings.Frequency > 0 Then g_Frequency = My.Settings.Frequency
@@ -39,7 +42,7 @@
         Timer1.Enabled = My.Settings.TimerEnabled
         If Timer1.Enabled And My.Settings.ShowBar Then Label1.Visible = True
         CopyColoro()
-        ToggleOptionsV(False)
+        If FormBorderStyle = BorderStyle.None Then Label1.Top = Me.Height - 1 Else Label1.Top = Me.Height - 40
         If My.Settings.FirstRun = True Then F1_MessageBox()
     End Sub
 
@@ -146,10 +149,31 @@
     End Sub
 
     Sub LoadWeb()
-        WebBrowser1.Navigate(S_URL.Text)
+        Dim src = ""
+        Dim wrResponse As WebResponse
+        Dim wrRequest As WebRequest = HttpWebRequest.Create(S_URL.Text)
+        wrResponse = wrRequest.GetResponse()
+
+        Using sr As New StreamReader(wrResponse.GetResponseStream())
+            src = sr.ReadToEnd()
+            sr.Close()
+        End Using
+
+
+        If src.IndexOf("<title>N") > 0 Or src.IndexOf("ge</title>") > 0 Then
+            If Width < 76 Then Width = 76
+            RichTextBox1.Text = " Not connected"
+            Logo()
+            Exit Sub '<title>Navigation Canceled</title> <title>Can&rsquo;t reach this page</title>
+        End If
+
+        Dim i = src.IndexOf(S_ScrapeBegin.Text, src.IndexOf(S_ScrapeAfter.Text))
+        Dim p = src.IndexOf(S_ScrapeEnd.Text, i)
+        RichTextBox1.Text = " " + src.Substring(i, p - i)
+
+        Logo()
+
         g_i += 1
-        AddHandler(WebBrowser1.DocumentCompleted), AddressOf Run
-        g_FromLoadWeb = 0
     End Sub
 
     Sub ToggleTimer()
@@ -185,31 +209,17 @@
             Me.FormBorderStyle = FormBorderStyle.None
             ToggleOptionsV(False)
         End If
-    End Sub
-
-    Sub Run()
-        If g_FromLoadWeb >= 1 Then
-            Return
-        Else
-            g_FromLoadWeb += 1
-        End If
-
-        If WebBrowser1.DocumentText.IndexOf("<title>N") > 0 Or WebBrowser1.DocumentText.IndexOf("ge</title>") > 0 Then
-            If Width < 76 Then Width = 76
-            RichTextBox1.Text = " Not connected"
-            Logo()
-            Exit Sub '<title>Navigation Canceled</title> <title>Can&rsquo;t reach this page</title>
-        End If
-
-        Dim i = WebBrowser1.DocumentText.IndexOf(S_ScrapeBegin.Text, WebBrowser1.DocumentText.IndexOf(S_ScrapeAfter.Text))
-        Dim p = WebBrowser1.DocumentText.IndexOf(S_ScrapeEnd.Text, i)
-        RichTextBox1.Text = " " + WebBrowser1.DocumentText.Substring(i, p - i)
-
-        Logo()
+        RichTextBox1.Width = Me.Width - RichTextBox1.Left
+        RichTextBox1.Height = Me.Height
     End Sub
 
     Sub Logo()
         If S_Log.Text = "" Or S_Log.Text.StartsWith("'") Then Return
+
+        Dim logDesc = ""
+        If My.Settings.LogDescription Then logDesc = " " + S_Description.Text
+        If S_Description.Text.StartsWith("'") Then logDesc = " " + S_Description.Text.Substring(1)
+
         Dim h = Date.Now.Hour.ToString
         Dim hh = CInt(h)
         Dim m = "AM"
@@ -220,7 +230,8 @@
         If s.Length = 1 Then s = "0" & s
         Dim t = hh & ":" & mi & ":" & s & ":" & m
         Dim d = Date.Now.Month.ToString & "/" & Date.Now.Day.ToString & "/" & Date.Now.Year.ToString
-        S_Log.AppendText(d & " " & t & RichTextBox1.Text & vbCrLf)
+
+        S_Log.AppendText(d & " " & t & logDesc & RichTextBox1.Text & vbCrLf)
     End Sub
 
     Sub F1_MessageBox()
@@ -233,7 +244,7 @@
         If S_Log.Focused Then q = 6
         Select Case q
             Case 1
-                s = "Description"
+                s = "Description" + vbNewLine + vbNewLine + "Add to log: 'Description"
             Case 2
                 s = "Scrape: " + S_URL.Text
             Case 3
@@ -308,18 +319,14 @@
         S_ScrapeEnd.Text = "<"
         S_Description.Text = "Get BTC price"
         LoadSettings()
-        WebBrowser1.ScriptErrorsSuppressed = True
         LoadWeb()
-        If FormBorderStyle = BorderStyle.None Then Label1.Top = Me.Height - 1 Else Label1.Top = Me.Height - 40
-        RichTextBox1.Width += 10
-        RichTextBox1.Height += 10
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         If g_i = 0 Then LoadWeb()
         g_i += 1
-        Label1.Width = g_i / g_Frequency * Me.Width '180*333ms=run 
-        If g_i > g_Frequency Then g_i = 0
+        Label1.Width = (g_i) / g_Frequency * Me.Width '180*333ms=run 
+        If g_i - 1 > g_Frequency Then g_i = 0 : Label1.Width = 0
     End Sub
 
     Private Sub coin_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing

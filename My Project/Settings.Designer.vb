@@ -353,6 +353,30 @@ Namespace My
                 Me("ShowBar") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property LogWordWrap() As Boolean
+            Get
+                Return CType(Me("LogWordWrap"),Boolean)
+            End Get
+            Set
+                Me("LogWordWrap") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property LogDescription() As Boolean
+            Get
+                Return CType(Me("LogDescription"),Boolean)
+            End Get
+            Set
+                Me("LogDescription") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
