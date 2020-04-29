@@ -135,7 +135,8 @@ Public Class coin
         CopyColoro()
     End Sub
 
-    Private Sub RichTextBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles RichTextBox1.KeyPress, S_URL.KeyPress, S_ScrapeEnd.KeyPress, S_ScrapeBegin.KeyPress, S_ScrapeAfter.KeyPress, S_Description.KeyPress, S_Log.KeyPress
+    Private Sub RichTextBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles RichTextBox1.KeyPress ', S_URL.KeyPress, S_ScrapeEnd.KeyPress, S_ScrapeBegin.KeyPress, S_ScrapeAfter.KeyPress, S_Description.KeyPress, S_Log.KeyPress
+        If CheckIfFocused_S() Then Exit Sub
         If GetAsyncKeyState(Keys.Enter) Then LoadWeb()
         If GetAsyncKeyState(Keys.T) Then
             ToggleTimer()
@@ -255,7 +256,7 @@ Public Class coin
             Case 5
                 s = "Scrape end: IndexOf(""" + S_ScrapeEnd.Text + """)"
             Case 6
-                s = "Log" + vbNewLine + vbNewLine + "Clear text or 'text:  Disable"
+                s = "Log (" + S_Log.Lines.Count.ToString + ")" + vbNewLine + vbNewLine + "Clear text or 'text:  Disable"
             Case Else
                 s = "Scrape:" + vbTab + vbTab + vbTab + S_URL.Text +
                 vbNewLine + "Scrape after (IndexOf):" + vbTab + S_ScrapeAfter.Text +
@@ -279,7 +280,13 @@ Public Class coin
         MsgBox(s, vbInformation, My.Settings.Title)
     End Sub
 
+    Function CheckIfFocused_S() As Boolean
+        Return S_Description.Focused Or S_URL.Focused Or S_ScrapeAfter.Focused Or S_ScrapeBegin.Focused Or S_ScrapeEnd.Focused Or S_Log.Focused
+    End Function
+
     Private Sub RichTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyDown, S_URL.KeyDown, S_ScrapeEnd.KeyDown, S_ScrapeBegin.KeyDown, S_ScrapeAfter.KeyDown, S_Description.KeyDown, S_Log.KeyDown
+        If GetAsyncKeyState(Keys.F1) Then F1_MessageBox()
+        If CheckIfFocused_S() Then Exit Sub
         GetAsyncKeyState(Keys.LShiftKey)
         GetAsyncKeyState(Keys.LControlKey)
         If GetAsyncKeyState(Keys.D0) Then Coloro(Color.Lime)
@@ -292,7 +299,6 @@ Public Class coin
         If GetAsyncKeyState(Keys.D7) Then Coloro(Color.HotPink)
         If GetAsyncKeyState(Keys.D8) Then Coloro(Color.DarkOrange)
         If GetAsyncKeyState(Keys.D9) Then Coloro(Color.Purple)
-        If GetAsyncKeyState(Keys.F1) Then F1_MessageBox()
         If GetAsyncKeyState(Keys.Up) Then g_Frequency += 1
         If GetAsyncKeyState(Keys.Down) Then g_Frequency -= 1
         If GetAsyncKeyState(Keys.Escape) Then Me.Close()
