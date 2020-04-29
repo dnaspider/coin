@@ -246,7 +246,9 @@ Public Class coin
         If S_Log.Focused Then q = 6
         Select Case q
             Case 1
-                s = "Description" + vbNewLine + vbNewLine + "Add to log: 'Description"
+                s = "Description" + vbNewLine + vbNewLine +
+                "Add to log:" + vbTab + "'Description" + vbNewLine +
+                "DOUBLE_CLICK:" + vbTab + "Toggle '"
             Case 2
                 s = "Scrape: " + S_URL.Text
             Case 3
@@ -256,7 +258,9 @@ Public Class coin
             Case 5
                 s = "Scrape end: IndexOf(""" + S_ScrapeEnd.Text + """)"
             Case 6
-                s = "Log (" + S_Log.Lines.Count.ToString + ")" + vbNewLine + vbNewLine + "Clear text or 'text:  Disable"
+                s = "Log (" + S_Log.Lines.Count.ToString + ")" + vbNewLine + vbNewLine +
+                    "Clear text or 'text:" + vbTab + "Disable" + vbNewLine +
+                    "DOUBLE_CLICK:" + vbTab + "Toggle '"
             Case Else
                 s = "Scrape:" + vbTab + vbTab + vbTab + S_URL.Text +
                 vbNewLine + "Scrape after (IndexOf):" + vbTab + S_ScrapeAfter.Text +
@@ -338,5 +342,13 @@ Public Class coin
 
     Private Sub coin_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         SaveSettings()
+    End Sub
+
+    Private Sub S_Description_DoubleClick(sender As Object, e As EventArgs) Handles S_Description.DoubleClick
+        If S_Description.Text.StartsWith("'") Then S_Description.Text = S_Description.Text.Substring(1) Else S_Description.Text = "'" + S_Description.Text
+    End Sub
+
+    Private Sub S_Log_DoubleClick(sender As Object, e As EventArgs) Handles S_Log.DoubleClick
+        If S_Log.Text.StartsWith("'") Then S_Log.Text = S_Log.Text.Substring(1) Else S_Log.Text = "'" + S_Log.Text
     End Sub
 End Class
