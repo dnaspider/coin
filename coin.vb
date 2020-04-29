@@ -152,20 +152,21 @@ Public Class coin
         Dim src = ""
         Dim wrResponse As WebResponse
         Dim wrRequest As WebRequest = HttpWebRequest.Create(S_URL.Text)
-        wrResponse = wrRequest.GetResponse()
 
-        Using sr As New StreamReader(wrResponse.GetResponseStream())
-            src = sr.ReadToEnd()
-            sr.Close()
-        End Using
-
-
-        If src.IndexOf("<title>N") > 0 Or src.IndexOf("ge</title>") > 0 Then
+        Try
+            wrResponse = wrRequest.GetResponse()
+            Using sr As New StreamReader(wrResponse.GetResponseStream())
+                src = sr.ReadToEnd()
+                sr.Close()
+            End Using
+        Catch ex As Exception
+            RichTextBox1.Text = " Not connected"
             If Width < 76 Then Width = 76
             RichTextBox1.Text = " Not connected"
             Logo()
-            Exit Sub '<title>Navigation Canceled</title> <title>Can&rsquo;t reach this page</title>
-        End If
+            g_i += 1
+            Exit Sub
+        End Try
 
         Dim i = src.IndexOf(S_ScrapeBegin.Text, src.IndexOf(S_ScrapeAfter.Text))
         Dim p = src.IndexOf(S_ScrapeEnd.Text, i)
