@@ -19,16 +19,16 @@ Public Class coin
             Me.Icon = Me.Icon
         End If
         Text = My.Settings.Title
-        If My.Settings.URL > "" Then S_URL.Text = My.Settings.URL
-        If My.Settings.ScrapeAfter > "" Then S_ScrapeAfter.Text = My.Settings.ScrapeAfter
-        If My.Settings.ScrapeBegin > "" Then S_ScrapeBegin.Text = My.Settings.ScrapeBegin
-        If My.Settings.ScrapeEnd > "" Then S_ScrapeEnd.Text = My.Settings.ScrapeEnd
+        If My.Settings.URL > "" Then S_URL.Text = My.Settings.URL 'https://www.coinbase.com/
+        If My.Settings.ScrapeAfter > "" Then S_ScrapeAfter.Text = My.Settings.ScrapeAfter 'BTC</h4>
+        If My.Settings.ScrapeBegin > "" Then S_ScrapeBegin.Text = My.Settings.ScrapeBegin '$
+        If My.Settings.ScrapeEnd > "" Then S_ScrapeEnd.Text = My.Settings.ScrapeEnd '<
         S_Log.Text = My.Settings.Log
         If My.Settings.LogWordWrap Then RichTextBox1.WordWrap = True Else RichTextBox1.WordWrap = False
-        If My.Settings.Description > "" Then S_Description.Text = My.Settings.Description
-        If My.Settings.TimerFrequency > 0 Then Timer1.Interval = My.Settings.TimerFrequency
-        If My.Settings.Frequency > 0 Then g_Frequency = My.Settings.Frequency
-        RichTextBox1.ZoomFactor = My.Settings.Zoom
+        If My.Settings.Description > "" Then S_Description.Text = My.Settings.Description 'Get BTC price
+        If My.Settings.TimerFrequency > 0 Then Timer1.Interval = My.Settings.TimerFrequency '333
+        If My.Settings.Frequency > 0 Then g_Frequency = My.Settings.Frequency '180
+        RichTextBox1.ZoomFactor = My.Settings.Zoom : Zoom()
         RichTextBox1.ForeColor = My.Settings.TextColor
         RichTextBox1.BackColor = My.Settings.BackgroundColor
         RichTextBox1.Left = My.Settings.MiscZoomLeft
@@ -42,7 +42,7 @@ Public Class coin
         Timer1.Enabled = My.Settings.TimerEnabled
         If Timer1.Enabled And My.Settings.ShowBar Then Label1.Visible = True
         CopyColoro()
-        If FormBorderStyle = BorderStyle.None Then Label1.Top = Me.Height - 1 Else Label1.Top = Me.Height - 40
+        If FormBorderStyle = BorderStyle.None Then Label1.Top = Me.Height - 1 : ToggleOptionsV(False) Else Label1.Top = Me.Height - 40
         RichTextBox1.Width = Me.Width - RichTextBox1.Left
         If My.Settings.FirstRun = True Then F1_MessageBox()
     End Sub
@@ -190,6 +190,7 @@ Public Class coin
     End Sub
 
     Sub ToggleOptionsV(b)
+        GetAsyncKeyState(Keys.LShiftKey) : If GetAsyncKeyState(Keys.LShiftKey) Then Exit Sub
         If b = True Then b = 1 Else b = 0
         S_URL.Visible = b
         S_Description.Visible = b
@@ -212,7 +213,6 @@ Public Class coin
             ToggleOptionsV(False)
         End If
         RichTextBox1.Width = Me.Width - RichTextBox1.Left
-        RichTextBox1.Height = Me.Height
     End Sub
 
     Sub Logo()
@@ -270,7 +270,7 @@ Public Class coin
                 vbNewLine + vbNewLine + "DOUBLE_CLICK or ENTER:" + vbTab + "Run" +
                 vbNewLine + "T:" + vbTab + vbTab + vbTab + "Toggle timer on/off" + " (" + Timer1.Enabled.ToString + ", " + My.Settings.TimerFrequency.ToString + "ms)" +
                 vbNewLine + "UP/DOWN:" + vbTab + vbTab + "+/- Frequency (" + g_Frequency.ToString + ")" +
-                vbNewLine + "O:" + vbTab + vbTab + vbTab + "Options" +
+                vbNewLine + "O (SHIFT):" + vbTab + vbTab + "Toggle options" +
                 vbNewLine + "CTRL + SCROLL_WHEEL:" + vbTab + "Font size" +
                 vbNewLine + "0-9 (SHIFT or CTRL):" + vbTab + "Color" +
                 vbNewLine + "A:" + vbTab + vbTab + vbTab + "Toggle always on top" +
@@ -310,33 +310,34 @@ Public Class coin
             Top = Cursor.Position.Y - Me.Height
             Left = Cursor.Position.X - Me.Width
         End If
-        If GetAsyncKeyState(Keys.LControlKey) Then
-            g_zoom = RichTextBox1.ZoomFactor
-            Select Case g_zoom
-                Case > 4.5
-                    RichTextBox1.Left = -6
-                Case > 2.5
-                    RichTextBox1.Left = -5
-                Case Else
-                    RichTextBox1.Left = -3
-            End Select
-        End If
+        If GetAsyncKeyState(Keys.LControlKey) Then Zoom()
+    End Sub
+
+    Sub Zoom()
+        g_zoom = RichTextBox1.ZoomFactor
+        Select Case g_zoom
+            Case > 4.5
+                RichTextBox1.Left = -6
+            Case > 2.5
+                RichTextBox1.Left = -5
+            Case Else
+                RichTextBox1.Left = -3
+        End Select
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
-        S_URL.Text = "https://www.coinbase.com/"
-        S_ScrapeBegin.Text = "$"
-        S_ScrapeAfter.Text = "BTC</h4>"
-        S_ScrapeEnd.Text = "<"
-        S_Description.Text = "Get BTC price"
+        Visible = False
         LoadSettings()
         LoadWeb()
+        Visible = True
+        AppActivate(My.Settings.Title)
+        RichTextBox1.Focus()
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         If g_i = 0 Then LoadWeb()
         g_i += 1
-        Label1.Width = (g_i) / g_Frequency * Me.Width '180*333ms=run 
+        Label1.Width = g_i / g_Frequency * Me.Width '180*333ms=run 
         If g_i - 1 > g_Frequency Then g_i = 0 : Label1.Width = 0
     End Sub
 
@@ -344,11 +345,29 @@ Public Class coin
         SaveSettings()
     End Sub
 
+    Sub ToggleHyph(c As Control)
+        If c.Text.StartsWith("'") Then c.Text = c.Text.Substring(1) Else c.Text = "'" + c.Text
+    End Sub
+
     Private Sub S_Description_DoubleClick(sender As Object, e As EventArgs) Handles S_Description.DoubleClick
-        If S_Description.Text.StartsWith("'") Then S_Description.Text = S_Description.Text.Substring(1) Else S_Description.Text = "'" + S_Description.Text
+        ToggleHyph(S_Description)
     End Sub
 
     Private Sub S_Log_DoubleClick(sender As Object, e As EventArgs) Handles S_Log.DoubleClick
-        If S_Log.Text.StartsWith("'") Then S_Log.Text = S_Log.Text.Substring(1) Else S_Log.Text = "'" + S_Log.Text
+        ToggleHyph(S_Log)
+    End Sub
+
+    Private Sub S_Log_MouseWheel(sender As Object, e As MouseEventArgs) Handles S_Log.MouseWheel
+        S_Log.Focus()
+        If e.Delta > 1 Then
+            If S_Log.GetFirstCharIndexOfCurrentLine > 1 Then S_Log.SelectionStart = S_Log.GetFirstCharIndexOfCurrentLine - 1
+        Else
+            S_Log.SelectionStart += S_Log.GetFirstCharIndexOfCurrentLine + 1
+        End If
+        S_Log.ScrollToCaret()
+    End Sub
+
+    Private Sub S_Log_MouseLeave(sender As Object, e As EventArgs) Handles S_Log.MouseLeave
+        RichTextBox1.Focus()
     End Sub
 End Class

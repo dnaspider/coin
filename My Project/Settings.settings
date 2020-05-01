@@ -57,7 +57,7 @@
       <Value Profile="(Default)">-3</Value>
     </Setting>
     <Setting Name="Description" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Get BTC price</Value>
     </Setting>
     <Setting Name="Sizeable" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
