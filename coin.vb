@@ -97,6 +97,7 @@ Public Class coin
         My.Settings.Title = My.Settings.Title
         My.Settings.ScrapeReplace = My.Settings.ScrapeReplace
         My.Settings.ScrapeReplaceW = My.Settings.ScrapeReplaceW
+        My.Settings.LogDescription = My.Settings.LogDescription
     End Sub
 
     Sub DragFormInit()
@@ -262,7 +263,7 @@ Public Class coin
         Select Case q
             Case 1
                 s = "Description" + vbNewLine + vbNewLine +
-                "Add to log:" + vbTab + "'Description" + vbNewLine +
+                "Exclude from log:" + vbTab + "'Description" + vbNewLine +
                 "DOUBLE_CLICK:" + vbTab + "Toggle '"
             Case 2
                 s = "Scrape: " + URL.Text
