@@ -234,7 +234,7 @@ Public Class coin
 
         Dim logDesc = ""
         If My.Settings.LogDescription Then logDesc = " " + Description.Text
-        If Description.Text.StartsWith("'") Then logDesc = " " + Description.Text.Substring(1)
+        If Description.Text.StartsWith("'") Then logDesc = ""
 
         Dim h = Date.Now.Hour.ToString
         Dim hh = CInt(h)
