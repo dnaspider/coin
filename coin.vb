@@ -1,8 +1,10 @@
 ﻿Imports System.Net
 Imports System.IO
+Imports System.Text.RegularExpressions
 
 Public Class coin
     Private Declare Function GetAsyncKeyState Lib "user32.dll" (ByVal vKey As Int32) As UShort
+    Private Declare Sub Keybd_event Lib "user32" Alias "keybd_event" (ByVal bVk As Integer, bScan As Integer, ByVal dwFlags As Integer, ByVal dwExtraInfo As Integer)
 
     Dim g_i = 0
     Dim g_Frequency = 180 '180*333ms=run 
@@ -19,13 +21,15 @@ Public Class coin
             Me.Icon = Me.Icon
         End If
         Text = My.Settings.Title
-        If My.Settings.URL > "" Then S_URL.Text = My.Settings.URL 'https://www.coinbase.com/
-        If My.Settings.ScrapeAfter > "" Then S_ScrapeAfter.Text = My.Settings.ScrapeAfter 'BTC</h4>
-        If My.Settings.ScrapeBegin > "" Then S_ScrapeBegin.Text = My.Settings.ScrapeBegin '$
-        If My.Settings.ScrapeEnd > "" Then S_ScrapeEnd.Text = My.Settings.ScrapeEnd '<
-        S_Log.Text = My.Settings.Log
+        If My.Settings.URL > "" Then URL.Text = My.Settings.URL 'https://www.coinbase.com/
+        If My.Settings.ScrapeAfter > "" Then ScrapeAfter.Text = My.Settings.ScrapeAfter 'BTC</h4>
+        If My.Settings.ScrapeBegin > "" Then ScrapeBegin.Text = My.Settings.ScrapeBegin '$
+        If My.Settings.ScrapeEnd > "" Then ScrapeEnd.Text = My.Settings.ScrapeEnd '<
+        Log.Text = My.Settings.Log
+        ScrapeReplace.Text = My.Settings.ScrapeReplace
+        ScrapeReplaceW.Text = My.Settings.ScrapeReplaceW
         If My.Settings.LogWordWrap Then RichTextBox1.WordWrap = True Else RichTextBox1.WordWrap = False
-        If My.Settings.Description > "" Then S_Description.Text = My.Settings.Description 'Get BTC price
+        If My.Settings.Description > "" Then Description.Text = My.Settings.Description 'Get BTC price
         If My.Settings.TimerFrequency > 0 Then Timer1.Interval = My.Settings.TimerFrequency '333
         If My.Settings.Frequency > 0 Then g_Frequency = My.Settings.Frequency '180
         RichTextBox1.ZoomFactor = My.Settings.Zoom : Zoom()
@@ -48,27 +52,31 @@ Public Class coin
     End Sub
 
     Sub CopyColoro()
-        S_URL.BackColor = RichTextBox1.BackColor
-        S_Description.BackColor = RichTextBox1.BackColor
-        S_ScrapeAfter.BackColor = RichTextBox1.BackColor
-        S_ScrapeBegin.BackColor = RichTextBox1.BackColor
-        S_ScrapeEnd.BackColor = RichTextBox1.BackColor
-        S_Log.BackColor = RichTextBox1.BackColor
-        S_URL.ForeColor = RichTextBox1.ForeColor
-        S_Description.ForeColor = RichTextBox1.ForeColor
-        S_ScrapeAfter.ForeColor = RichTextBox1.ForeColor
-        S_ScrapeBegin.ForeColor = RichTextBox1.ForeColor
-        S_ScrapeEnd.ForeColor = RichTextBox1.ForeColor
-        S_Log.ForeColor = RichTextBox1.ForeColor
+        URL.BackColor = RichTextBox1.BackColor
+        Description.BackColor = RichTextBox1.BackColor
+        ScrapeAfter.BackColor = RichTextBox1.BackColor
+        ScrapeBegin.BackColor = RichTextBox1.BackColor
+        ScrapeEnd.BackColor = RichTextBox1.BackColor
+        Log.BackColor = RichTextBox1.BackColor
+        ScrapeReplace.BackColor = RichTextBox1.BackColor
+        ScrapeReplaceW.BackColor = RichTextBox1.BackColor
+        URL.ForeColor = RichTextBox1.ForeColor
+        Description.ForeColor = RichTextBox1.ForeColor
+        ScrapeAfter.ForeColor = RichTextBox1.ForeColor
+        ScrapeBegin.ForeColor = RichTextBox1.ForeColor
+        ScrapeEnd.ForeColor = RichTextBox1.ForeColor
+        Log.ForeColor = RichTextBox1.ForeColor
+        ScrapeReplace.ForeColor = RichTextBox1.ForeColor
+        ScrapeReplaceW.ForeColor = RichTextBox1.ForeColor
     End Sub
 
     Sub SaveSettings()
-        My.Settings.URL = S_URL.Text
-        My.Settings.ScrapeAfter = S_ScrapeAfter.Text
-        My.Settings.ScrapeBegin = S_ScrapeBegin.Text
-        My.Settings.ScrapeEnd = S_ScrapeEnd.Text
-        My.Settings.Description = S_Description.Text
-        My.Settings.Log = S_Log.Text
+        My.Settings.URL = URL.Text
+        My.Settings.ScrapeAfter = ScrapeAfter.Text
+        My.Settings.ScrapeBegin = ScrapeBegin.Text
+        My.Settings.ScrapeEnd = ScrapeEnd.Text
+        My.Settings.Description = Description.Text
+        My.Settings.Log = Log.Text
         If g_Frequency > 0 Then My.Settings.Frequency = g_Frequency
         If Timer1.Interval > 0 Then My.Settings.TimerFrequency = Timer1.Interval
         My.Settings.TimerEnabled = Timer1.Enabled
@@ -87,6 +95,8 @@ Public Class coin
         My.Settings.Icon = My.Settings.Icon
         My.Settings.FirstRun = False
         My.Settings.Title = My.Settings.Title
+        My.Settings.ScrapeReplace = My.Settings.ScrapeReplace
+        My.Settings.ScrapeReplaceW = My.Settings.ScrapeReplaceW
     End Sub
 
     Sub DragFormInit()
@@ -135,8 +145,8 @@ Public Class coin
         CopyColoro()
     End Sub
 
-    Private Sub RichTextBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles RichTextBox1.KeyPress ', S_URL.KeyPress, S_ScrapeEnd.KeyPress, S_ScrapeBegin.KeyPress, S_ScrapeAfter.KeyPress, S_Description.KeyPress, S_Log.KeyPress
-        If CheckIfFocused_S() Then Exit Sub
+    Private Sub RichTextBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles RichTextBox1.KeyPress ', URL.KeyPress, ScrapeEnd.KeyPress, ScrapeBegin.KeyPress, ScrapeAfter.KeyPress, Description.KeyPress, Log.KeyPress
+        If CheckIfFocused() Then Exit Sub
         If GetAsyncKeyState(Keys.Enter) Then LoadWeb()
         If GetAsyncKeyState(Keys.T) Then
             ToggleTimer()
@@ -153,9 +163,9 @@ Public Class coin
     Sub LoadWeb()
         Dim src = ""
         Dim wrResponse As WebResponse
-        Dim wrRequest As WebRequest = HttpWebRequest.Create(S_URL.Text)
 
         Try
+            Dim wrRequest As WebRequest = HttpWebRequest.Create(URL.Text)
             wrResponse = wrRequest.GetResponse()
             Using sr As New StreamReader(wrResponse.GetResponseStream())
                 src = sr.ReadToEnd()
@@ -169,9 +179,11 @@ Public Class coin
             Exit Sub
         End Try
 
-        Dim i = src.IndexOf(S_ScrapeBegin.Text, src.IndexOf(S_ScrapeAfter.Text))
-        Dim p = src.IndexOf(S_ScrapeEnd.Text, i)
+        Dim i = src.IndexOf(ScrapeBegin.Text, src.IndexOf(ScrapeAfter.Text))
+        Dim p = src.IndexOf(ScrapeEnd.Text, i)
         RichTextBox1.Text = " " + src.Substring(i, p - i)
+
+        RichTextBox1.Text = Regex.Replace(RichTextBox1.Text, ScrapeReplace.Text, ScrapeReplaceW.Text)
 
         Logo()
 
@@ -192,12 +204,14 @@ Public Class coin
     Sub ToggleOptionsV(b)
         GetAsyncKeyState(Keys.LShiftKey) : If GetAsyncKeyState(Keys.LShiftKey) Then Exit Sub
         If b = True Then b = 1 Else b = 0
-        S_URL.Visible = b
-        S_Description.Visible = b
-        S_ScrapeAfter.Visible = b
-        S_ScrapeBegin.Visible = b
-        S_ScrapeEnd.Visible = b
-        S_Log.Visible = b
+        URL.Visible = b
+        Description.Visible = b
+        ScrapeAfter.Visible = b
+        ScrapeBegin.Visible = b
+        ScrapeEnd.Visible = b
+        ScrapeReplace.Visible = b
+        ScrapeReplaceW.Visible = b
+        Log.Visible = b
     End Sub
 
     Sub ToggleOptions()
@@ -216,11 +230,11 @@ Public Class coin
     End Sub
 
     Sub Logo()
-        If S_Log.Text = "" Or S_Log.Text.StartsWith("'") Then Return
+        If Log.Text = "" Or Log.Text.StartsWith("'") Then Return
 
         Dim logDesc = ""
-        If My.Settings.LogDescription Then logDesc = " " + S_Description.Text
-        If S_Description.Text.StartsWith("'") Then logDesc = " " + S_Description.Text.Substring(1)
+        If My.Settings.LogDescription Then logDesc = " " + Description.Text
+        If Description.Text.StartsWith("'") Then logDesc = " " + Description.Text.Substring(1)
 
         Dim h = Date.Now.Hour.ToString
         Dim hh = CInt(h)
@@ -233,40 +247,48 @@ Public Class coin
         Dim t = hh & ":" & mi & ":" & s & ":" & m
         Dim d = Date.Now.Month.ToString & "/" & Date.Now.Day.ToString & "/" & Date.Now.Year.ToString
 
-        S_Log.AppendText(d & " " & t & logDesc & RichTextBox1.Text & vbCrLf)
+        Log.AppendText(d & " " & t & logDesc & RichTextBox1.Text & vbCrLf)
     End Sub
 
     Sub F1_MessageBox()
-        Dim q = 0, s
-        If S_Description.Focused Then q = 1
-        If S_URL.Focused Then q = 2
-        If S_ScrapeAfter.Focused Then q = 3
-        If S_ScrapeBegin.Focused Then q = 4
-        If S_ScrapeEnd.Focused Then q = 5
-        If S_Log.Focused Then q = 6
+        Dim q = 0, s = ""
+        If Description.Focused Then q = 1
+        If URL.Focused Then q = 2
+        If ScrapeAfter.Focused Then q = 3
+        If ScrapeBegin.Focused Then q = 4
+        If ScrapeEnd.Focused Then q = 5
+        If Log.Focused Then q = 6
+        If ScrapeReplace.Focused Or ScrapeReplaceW.Focused Then q = 7
         Select Case q
             Case 1
                 s = "Description" + vbNewLine + vbNewLine +
                 "Add to log:" + vbTab + "'Description" + vbNewLine +
                 "DOUBLE_CLICK:" + vbTab + "Toggle '"
             Case 2
-                s = "Scrape: " + S_URL.Text
+                s = "Scrape: " + URL.Text
             Case 3
-                s = "Start scrape after: IndexOf(""" + S_ScrapeAfter.Text + """)"
+                s = "Start scrape after: IndexOf(""" + ScrapeAfter.Text + """)"
             Case 4
-                s = "Scrape begin: IndexOf(""" + S_ScrapeBegin.Text + """)"
+                s = "Scrape begin: IndexOf(""" + ScrapeBegin.Text + """)"
             Case 5
-                s = "Scrape end: IndexOf(""" + S_ScrapeEnd.Text + """)"
+                s = "Scrape end: IndexOf(""" + ScrapeEnd.Text + """)"
             Case 6
-                s = "Log (" + S_Log.Lines.Count.ToString + ")" + vbNewLine + vbNewLine +
+                s = "Log (" + Log.Lines.Count.ToString + ")" + vbNewLine + vbNewLine +
                     "Clear text or 'text:" + vbTab + "Disable" + vbNewLine +
                     "DOUBLE_CLICK:" + vbTab + "Toggle '"
+            Case 7
+                Dim r = ""
+                r = RichTextBox1.Text : r = Regex.Replace(r, ScrapeReplace.Text, ScrapeReplaceW.Text)
+                s = "Regex Replace """ + ScrapeReplace.Text + """ with """ + ScrapeReplaceW.Text + """" + vbNewLine + r
             Case Else
-                s = "Scrape:" + vbTab + vbTab + vbTab + S_URL.Text +
-                vbNewLine + "Scrape after (IndexOf):" + vbTab + S_ScrapeAfter.Text +
-                vbNewLine + "Scrape begin:" + vbTab + vbTab + S_ScrapeBegin.Text +
-                vbNewLine + "Scrape end:" + vbTab + vbTab + S_ScrapeEnd.Text +
-                vbNewLine + "Description:" + vbTab + vbTab + S_Description.Text +
+                s = "Scrape:" + vbTab + vbTab + vbTab + URL.Text +
+                vbNewLine + "Scrape after (IndexOf):" + vbTab + ScrapeAfter.Text +
+                vbNewLine + "Scrape begin:" + vbTab + vbTab + ScrapeBegin.Text +
+                vbNewLine + "Scrape end:" + vbTab + vbTab + ScrapeEnd.Text +
+                vbNewLine + "Regex replace:" + vbTab + vbTab + ScrapeReplace.Text +
+                vbNewLine + "Replace with:" + vbTab + vbTab + ScrapeReplaceW.Text +
+                vbNewLine + "Description:" + vbTab + vbTab + Description.Text +
+                vbNewLine + "Log count:" + vbTab + vbTab + Log.Lines.Count.ToString +
                 vbNewLine + vbNewLine + "DOUBLE_CLICK or ENTER:" + vbTab + "Run" +
                 vbNewLine + "T:" + vbTab + vbTab + vbTab + "Toggle timer on/off" + " (" + Timer1.Enabled.ToString + ", " + My.Settings.TimerFrequency.ToString + "ms)" +
                 vbNewLine + "UP/DOWN:" + vbTab + vbTab + "+/- Frequency (" + g_Frequency.ToString + ")" +
@@ -284,15 +306,14 @@ Public Class coin
         MsgBox(s, vbInformation, My.Settings.Title)
     End Sub
 
-    Function CheckIfFocused_S() As Boolean
-        Return S_Description.Focused Or S_URL.Focused Or S_ScrapeAfter.Focused Or S_ScrapeBegin.Focused Or S_ScrapeEnd.Focused Or S_Log.Focused
+    Function CheckIfFocused() As Boolean
+        Return Description.Focused Or URL.Focused Or ScrapeAfter.Focused Or ScrapeBegin.Focused Or ScrapeEnd.Focused Or Log.Focused Or ScrapeReplace.Focused Or ScrapeReplaceW.Focused
     End Function
 
-    Private Sub RichTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyDown, S_URL.KeyDown, S_ScrapeEnd.KeyDown, S_ScrapeBegin.KeyDown, S_ScrapeAfter.KeyDown, S_Description.KeyDown, S_Log.KeyDown
+    Private Sub RichTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyDown, URL.KeyDown, ScrapeEnd.KeyDown, ScrapeBegin.KeyDown, ScrapeAfter.KeyDown, Description.KeyDown, Log.KeyDown, ScrapeReplace.KeyDown, ScrapeReplaceW.KeyDown
         If GetAsyncKeyState(Keys.F1) Then F1_MessageBox()
-        If CheckIfFocused_S() Then Exit Sub
-        GetAsyncKeyState(Keys.LShiftKey)
-        GetAsyncKeyState(Keys.LControlKey)
+        If CheckIfFocused() Then Exit Sub
+        GetAsyncKeyState(Keys.LShiftKey) : GetAsyncKeyState(Keys.LControlKey) : GetAsyncKeyState(Keys.D0) : GetAsyncKeyState(Keys.D1) : GetAsyncKeyState(Keys.D2) : GetAsyncKeyState(Keys.D3) : GetAsyncKeyState(Keys.D4) : GetAsyncKeyState(Keys.D5) : GetAsyncKeyState(Keys.D6) : GetAsyncKeyState(Keys.D7) : GetAsyncKeyState(Keys.D8) : GetAsyncKeyState(Keys.D9)
         If GetAsyncKeyState(Keys.D0) Then Coloro(Color.Lime)
         If GetAsyncKeyState(Keys.D1) Then Coloro(Color.Red)
         If GetAsyncKeyState(Keys.D2) Then Coloro(Color.White)
@@ -349,25 +370,25 @@ Public Class coin
         If c.Text.StartsWith("'") Then c.Text = c.Text.Substring(1) Else c.Text = "'" + c.Text
     End Sub
 
-    Private Sub S_Description_DoubleClick(sender As Object, e As EventArgs) Handles S_Description.DoubleClick
-        ToggleHyph(S_Description)
+    Private Sub Description_DoubleClick(sender As Object, e As EventArgs) Handles Description.DoubleClick
+        ToggleHyph(Description)
     End Sub
 
-    Private Sub S_Log_DoubleClick(sender As Object, e As EventArgs) Handles S_Log.DoubleClick
-        ToggleHyph(S_Log)
+    Private Sub Log_DoubleClick(sender As Object, e As EventArgs) Handles Log.DoubleClick
+        ToggleHyph(Log)
     End Sub
 
-    Private Sub S_Log_MouseWheel(sender As Object, e As MouseEventArgs) Handles S_Log.MouseWheel
-        S_Log.Focus()
-        If e.Delta > 1 Then
-            If S_Log.GetFirstCharIndexOfCurrentLine > 1 Then S_Log.SelectionStart = S_Log.GetFirstCharIndexOfCurrentLine - 1
-        Else
-            S_Log.SelectionStart += S_Log.GetFirstCharIndexOfCurrentLine + 1
-        End If
-        S_Log.ScrollToCaret()
+    Sub Key(key As Keys)
+        Keybd_event(key, 0, 1, 0)
+        Keybd_event(key, 0, 2, 0)
     End Sub
 
-    Private Sub S_Log_MouseLeave(sender As Object, e As EventArgs) Handles S_Log.MouseLeave
+    Private Sub Log_MouseWheel(sender As Object, e As MouseEventArgs) Handles Log.MouseWheel
+        Log.Focus()
+        If e.Delta > 1 Then Key(Keys.Up) Else Key(Keys.Down)
+    End Sub
+
+    Private Sub Log_MouseLeave(sender As Object, e As EventArgs) Handles Log.MouseLeave
         RichTextBox1.Focus()
     End Sub
 End Class

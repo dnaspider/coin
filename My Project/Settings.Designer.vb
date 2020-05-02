@@ -377,6 +377,30 @@ Namespace My
                 Me("LogDescription") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property ScrapeReplace() As String
+            Get
+                Return CType(Me("ScrapeReplace"),String)
+            End Get
+            Set
+                Me("ScrapeReplace") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property ScrapeReplaceW() As String
+            Get
+                Return CType(Me("ScrapeReplaceW"),String)
+            End Get
+            Set
+                Me("ScrapeReplaceW") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

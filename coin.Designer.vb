@@ -26,12 +26,14 @@ Partial Class coin
         Me.RichTextBox1 = New System.Windows.Forms.RichTextBox()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.S_URL = New System.Windows.Forms.TextBox()
-        Me.S_ScrapeAfter = New System.Windows.Forms.TextBox()
-        Me.S_ScrapeBegin = New System.Windows.Forms.TextBox()
-        Me.S_ScrapeEnd = New System.Windows.Forms.TextBox()
-        Me.S_Description = New System.Windows.Forms.TextBox()
-        Me.S_Log = New System.Windows.Forms.TextBox()
+        Me.URL = New System.Windows.Forms.TextBox()
+        Me.ScrapeAfter = New System.Windows.Forms.TextBox()
+        Me.ScrapeBegin = New System.Windows.Forms.TextBox()
+        Me.ScrapeEnd = New System.Windows.Forms.TextBox()
+        Me.Description = New System.Windows.Forms.TextBox()
+        Me.Log = New System.Windows.Forms.TextBox()
+        Me.ScrapeReplace = New System.Windows.Forms.TextBox()
+        Me.ScrapeReplaceW = New System.Windows.Forms.TextBox()
         Me.SuspendLayout()
         '
         'RichTextBox1
@@ -69,73 +71,95 @@ Partial Class coin
         Me.Label1.Text = " "
         Me.Label1.Visible = False
         '
-        'S_URL
+        'URL
         '
-        Me.S_URL.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.URL.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.S_URL.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.S_URL.ForeColor = System.Drawing.Color.Yellow
-        Me.S_URL.Location = New System.Drawing.Point(13, 182)
-        Me.S_URL.Name = "S_URL"
-        Me.S_URL.Size = New System.Drawing.Size(320, 37)
-        Me.S_URL.TabIndex = 2
+        Me.URL.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.URL.ForeColor = System.Drawing.Color.Yellow
+        Me.URL.Location = New System.Drawing.Point(13, 182)
+        Me.URL.Name = "URL"
+        Me.URL.Size = New System.Drawing.Size(320, 37)
+        Me.URL.TabIndex = 2
         '
-        'S_ScrapeAfter
+        'ScrapeAfter
         '
-        Me.S_ScrapeAfter.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.ScrapeAfter.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.S_ScrapeAfter.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.S_ScrapeAfter.ForeColor = System.Drawing.Color.Yellow
-        Me.S_ScrapeAfter.Location = New System.Drawing.Point(13, 225)
-        Me.S_ScrapeAfter.Name = "S_ScrapeAfter"
-        Me.S_ScrapeAfter.Size = New System.Drawing.Size(320, 37)
-        Me.S_ScrapeAfter.TabIndex = 3
+        Me.ScrapeAfter.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ScrapeAfter.ForeColor = System.Drawing.Color.Yellow
+        Me.ScrapeAfter.Location = New System.Drawing.Point(13, 225)
+        Me.ScrapeAfter.Name = "ScrapeAfter"
+        Me.ScrapeAfter.Size = New System.Drawing.Size(320, 37)
+        Me.ScrapeAfter.TabIndex = 3
         '
-        'S_ScrapeBegin
+        'ScrapeBegin
         '
-        Me.S_ScrapeBegin.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.ScrapeBegin.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.S_ScrapeBegin.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.S_ScrapeBegin.ForeColor = System.Drawing.Color.Yellow
-        Me.S_ScrapeBegin.Location = New System.Drawing.Point(13, 268)
-        Me.S_ScrapeBegin.Name = "S_ScrapeBegin"
-        Me.S_ScrapeBegin.Size = New System.Drawing.Size(320, 37)
-        Me.S_ScrapeBegin.TabIndex = 4
+        Me.ScrapeBegin.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ScrapeBegin.ForeColor = System.Drawing.Color.Yellow
+        Me.ScrapeBegin.Location = New System.Drawing.Point(13, 268)
+        Me.ScrapeBegin.Name = "ScrapeBegin"
+        Me.ScrapeBegin.Size = New System.Drawing.Size(320, 37)
+        Me.ScrapeBegin.TabIndex = 4
         '
-        'S_ScrapeEnd
+        'ScrapeEnd
         '
-        Me.S_ScrapeEnd.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.ScrapeEnd.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.S_ScrapeEnd.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.S_ScrapeEnd.ForeColor = System.Drawing.Color.Yellow
-        Me.S_ScrapeEnd.Location = New System.Drawing.Point(13, 310)
-        Me.S_ScrapeEnd.Name = "S_ScrapeEnd"
-        Me.S_ScrapeEnd.Size = New System.Drawing.Size(320, 37)
-        Me.S_ScrapeEnd.TabIndex = 5
+        Me.ScrapeEnd.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ScrapeEnd.ForeColor = System.Drawing.Color.Yellow
+        Me.ScrapeEnd.Location = New System.Drawing.Point(13, 310)
+        Me.ScrapeEnd.Name = "ScrapeEnd"
+        Me.ScrapeEnd.Size = New System.Drawing.Size(320, 37)
+        Me.ScrapeEnd.TabIndex = 5
         '
-        'S_Description
+        'Description
         '
-        Me.S_Description.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Description.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.S_Description.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.S_Description.ForeColor = System.Drawing.Color.Yellow
-        Me.S_Description.Location = New System.Drawing.Point(13, 353)
-        Me.S_Description.Name = "S_Description"
-        Me.S_Description.Size = New System.Drawing.Size(320, 37)
-        Me.S_Description.TabIndex = 6
+        Me.Description.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.Description.ForeColor = System.Drawing.Color.Yellow
+        Me.Description.Location = New System.Drawing.Point(13, 439)
+        Me.Description.Name = "Description"
+        Me.Description.Size = New System.Drawing.Size(320, 37)
+        Me.Description.TabIndex = 8
         '
-        'S_Log
+        'Log
         '
-        Me.S_Log.AcceptsReturn = True
-        Me.S_Log.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.Log.AcceptsReturn = True
+        Me.Log.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.S_Log.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.S_Log.ForeColor = System.Drawing.Color.Yellow
-        Me.S_Log.Location = New System.Drawing.Point(13, 396)
-        Me.S_Log.Multiline = True
-        Me.S_Log.Name = "S_Log"
-        Me.S_Log.Size = New System.Drawing.Size(320, 159)
-        Me.S_Log.TabIndex = 7
+        Me.Log.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.Log.ForeColor = System.Drawing.Color.Yellow
+        Me.Log.Location = New System.Drawing.Point(13, 482)
+        Me.Log.Multiline = True
+        Me.Log.Name = "Log"
+        Me.Log.Size = New System.Drawing.Size(320, 159)
+        Me.Log.TabIndex = 9
+        '
+        'ScrapeReplace
+        '
+        Me.ScrapeReplace.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ScrapeReplace.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ScrapeReplace.ForeColor = System.Drawing.Color.Yellow
+        Me.ScrapeReplace.Location = New System.Drawing.Point(13, 353)
+        Me.ScrapeReplace.Name = "ScrapeReplace"
+        Me.ScrapeReplace.Size = New System.Drawing.Size(320, 37)
+        Me.ScrapeReplace.TabIndex = 6
+        '
+        'ScrapeReplaceW
+        '
+        Me.ScrapeReplaceW.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ScrapeReplaceW.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ScrapeReplaceW.ForeColor = System.Drawing.Color.Yellow
+        Me.ScrapeReplaceW.Location = New System.Drawing.Point(13, 396)
+        Me.ScrapeReplaceW.Name = "ScrapeReplaceW"
+        Me.ScrapeReplaceW.Size = New System.Drawing.Size(320, 37)
+        Me.ScrapeReplaceW.TabIndex = 7
         '
         'coin
         '
@@ -144,12 +168,14 @@ Partial Class coin
         Me.BackColor = System.Drawing.Color.Black
         Me.ClientSize = New System.Drawing.Size(345, 74)
         Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.S_Log)
-        Me.Controls.Add(Me.S_Description)
-        Me.Controls.Add(Me.S_ScrapeEnd)
-        Me.Controls.Add(Me.S_ScrapeBegin)
-        Me.Controls.Add(Me.S_ScrapeAfter)
-        Me.Controls.Add(Me.S_URL)
+        Me.Controls.Add(Me.Log)
+        Me.Controls.Add(Me.ScrapeReplaceW)
+        Me.Controls.Add(Me.ScrapeReplace)
+        Me.Controls.Add(Me.Description)
+        Me.Controls.Add(Me.ScrapeEnd)
+        Me.Controls.Add(Me.ScrapeBegin)
+        Me.Controls.Add(Me.ScrapeAfter)
+        Me.Controls.Add(Me.URL)
         Me.Controls.Add(Me.RichTextBox1)
         Me.Cursor = System.Windows.Forms.Cursors.Default
         Me.ForeColor = System.Drawing.Color.White
@@ -167,10 +193,12 @@ Partial Class coin
     Friend WithEvents RichTextBox1 As RichTextBox
     Friend WithEvents Timer1 As Timer
     Friend WithEvents Label1 As Label
-    Friend WithEvents S_URL As TextBox
-    Friend WithEvents S_ScrapeAfter As TextBox
-    Friend WithEvents S_ScrapeBegin As TextBox
-    Friend WithEvents S_ScrapeEnd As TextBox
-    Friend WithEvents S_Description As TextBox
-    Friend WithEvents S_Log As TextBox
+    Friend WithEvents URL As TextBox
+    Friend WithEvents ScrapeAfter As TextBox
+    Friend WithEvents ScrapeBegin As TextBox
+    Friend WithEvents ScrapeEnd As TextBox
+    Friend WithEvents Description As TextBox
+    Friend WithEvents Log As TextBox
+    Friend WithEvents ScrapeReplace As TextBox
+    Friend WithEvents ScrapeReplaceW As TextBox
 End Class
