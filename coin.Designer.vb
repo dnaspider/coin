@@ -44,7 +44,6 @@ Partial Class coin
         Me.RichTextBox1.BackColor = System.Drawing.Color.Black
         Me.RichTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.RichTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.RichTextBox1.DetectUrls = False
         Me.RichTextBox1.ForeColor = System.Drawing.Color.Red
         Me.RichTextBox1.Location = New System.Drawing.Point(-10, 0)
         Me.RichTextBox1.MaxLength = 15
