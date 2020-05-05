@@ -162,6 +162,9 @@ Public Class coin
     End Sub
 
     Sub LoadWeb()
+        GetAsyncKeyState(Keys.LShiftKey)
+        If GetAsyncKeyState(Keys.LShiftKey) Then Return
+
         Dim src = ""
         Dim wrResponse As WebResponse
 
@@ -286,6 +289,7 @@ Public Class coin
                 vbNewLine + "Scrape after (IndexOf):" + vbTab + ScrapeAfter.Text +
                 vbNewLine + "Scrape begin:" + vbTab + vbTab + ScrapeBegin.Text +
                 vbNewLine + "Scrape end:" + vbTab + vbTab + ScrapeEnd.Text +
+                vbNewLine + "Hold SHIFT:" + vbTab + vbTab + "Bypass scrape" +
                 vbNewLine + "Regex replace:" + vbTab + vbTab + ScrapeReplace.Text +
                 vbNewLine + "Replace with:" + vbTab + vbTab + ScrapeReplaceW.Text +
                 vbNewLine + "Description:" + vbTab + vbTab + Description.Text +
