@@ -364,9 +364,9 @@ Public Class coin
         Visible = False
         LoadSettings()
         LoadWeb()
-        RichTextBox1.Focus()
         Zoom()
         Visible = True
+        RichTextBox1.Focus()
         AppActivate(My.Settings.Title)
     End Sub
 
