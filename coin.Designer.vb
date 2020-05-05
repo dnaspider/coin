@@ -45,8 +45,8 @@ Partial Class coin
         Me.RichTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.RichTextBox1.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.RichTextBox1.ForeColor = System.Drawing.Color.Red
-        Me.RichTextBox1.Location = New System.Drawing.Point(-10, 0)
-        Me.RichTextBox1.MaxLength = 15
+        Me.RichTextBox1.Location = New System.Drawing.Point(-10, 4)
+        Me.RichTextBox1.MaxLength = 0
         Me.RichTextBox1.Name = "RichTextBox1"
         Me.RichTextBox1.ReadOnly = True
         Me.RichTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None
@@ -88,6 +88,7 @@ Partial Class coin
         Me.ScrapeAfter.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.ScrapeAfter.ForeColor = System.Drawing.Color.Yellow
         Me.ScrapeAfter.Location = New System.Drawing.Point(13, 225)
+        Me.ScrapeAfter.Multiline = True
         Me.ScrapeAfter.Name = "ScrapeAfter"
         Me.ScrapeAfter.Size = New System.Drawing.Size(320, 37)
         Me.ScrapeAfter.TabIndex = 3
@@ -99,6 +100,7 @@ Partial Class coin
         Me.ScrapeBegin.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.ScrapeBegin.ForeColor = System.Drawing.Color.Yellow
         Me.ScrapeBegin.Location = New System.Drawing.Point(13, 268)
+        Me.ScrapeBegin.Multiline = True
         Me.ScrapeBegin.Name = "ScrapeBegin"
         Me.ScrapeBegin.Size = New System.Drawing.Size(320, 37)
         Me.ScrapeBegin.TabIndex = 4
@@ -110,6 +112,7 @@ Partial Class coin
         Me.ScrapeEnd.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.ScrapeEnd.ForeColor = System.Drawing.Color.Yellow
         Me.ScrapeEnd.Location = New System.Drawing.Point(13, 310)
+        Me.ScrapeEnd.Multiline = True
         Me.ScrapeEnd.Name = "ScrapeEnd"
         Me.ScrapeEnd.Size = New System.Drawing.Size(320, 37)
         Me.ScrapeEnd.TabIndex = 5
@@ -145,6 +148,7 @@ Partial Class coin
         Me.ScrapeReplace.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.ScrapeReplace.ForeColor = System.Drawing.Color.Yellow
         Me.ScrapeReplace.Location = New System.Drawing.Point(13, 353)
+        Me.ScrapeReplace.Multiline = True
         Me.ScrapeReplace.Name = "ScrapeReplace"
         Me.ScrapeReplace.Size = New System.Drawing.Size(320, 37)
         Me.ScrapeReplace.TabIndex = 6
@@ -156,6 +160,7 @@ Partial Class coin
         Me.ScrapeReplaceW.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.ScrapeReplaceW.ForeColor = System.Drawing.Color.Yellow
         Me.ScrapeReplaceW.Location = New System.Drawing.Point(13, 396)
+        Me.ScrapeReplaceW.Multiline = True
         Me.ScrapeReplaceW.Name = "ScrapeReplaceW"
         Me.ScrapeReplaceW.Size = New System.Drawing.Size(320, 37)
         Me.ScrapeReplaceW.TabIndex = 7

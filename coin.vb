@@ -32,7 +32,7 @@ Public Class coin
         If My.Settings.Description > "" Then Description.Text = My.Settings.Description 'Get BTC price
         If My.Settings.TimerFrequency > 0 Then Timer1.Interval = My.Settings.TimerFrequency '333
         If My.Settings.Frequency > 0 Then g_Frequency = My.Settings.Frequency '180
-        RichTextBox1.ZoomFactor = My.Settings.Zoom : Zoom()
+        RichTextBox1.ZoomFactor = My.Settings.Zoom
         RichTextBox1.ForeColor = My.Settings.TextColor
         RichTextBox1.BackColor = My.Settings.BackgroundColor
         RichTextBox1.Left = My.Settings.MiscZoomLeft
@@ -95,8 +95,8 @@ Public Class coin
         My.Settings.Icon = My.Settings.Icon
         My.Settings.FirstRun = False
         My.Settings.Title = My.Settings.Title
-        My.Settings.ScrapeReplace = My.Settings.ScrapeReplace
-        My.Settings.ScrapeReplaceW = My.Settings.ScrapeReplaceW
+        My.Settings.ScrapeReplace = ScrapeReplace.Text
+        My.Settings.ScrapeReplaceW = ScrapeReplaceW.Text
         My.Settings.LogDescription = My.Settings.LogDescription
     End Sub
 
@@ -113,7 +113,14 @@ Public Class coin
         End If
     End Sub
 
+    Sub ToggleReadOnly()
+        If RichTextBox1.ReadOnly Then RichTextBox1.ReadOnly = False Else RichTextBox1.ReadOnly = True
+    End Sub
+
     Private Sub RichTextBox1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles RichTextBox1.MouseDoubleClick
+        GetAsyncKeyState(Keys.LControlKey)
+        If GetAsyncKeyState(Keys.LControlKey) Then ToggleReadOnly() : Exit Sub
+
         LoadWeb()
     End Sub
 
@@ -122,9 +129,10 @@ Public Class coin
     End Sub
 
     Private Sub Form1_MouseUp(sender As Object, e As MouseEventArgs) Handles Me.MouseUp, RichTextBox1.MouseUp
+        g_drag = False
+        If RichTextBox1.ReadOnly = False Then Exit Sub
         RichTextBox1.SelectionStart = 0
         RichTextBox1.SelectionLength = 0
-        g_drag = False
     End Sub
 
     Private Sub Form1_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove, RichTextBox1.MouseMove
@@ -146,9 +154,9 @@ Public Class coin
         CopyColoro()
     End Sub
 
-    Private Sub RichTextBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles RichTextBox1.KeyPress ', URL.KeyPress, ScrapeEnd.KeyPress, ScrapeBegin.KeyPress, ScrapeAfter.KeyPress, Description.KeyPress, Log.KeyPress
+    Private Sub RichTextBox1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles RichTextBox1.KeyPress
         If CheckIfFocused() Then Exit Sub
-        If GetAsyncKeyState(Keys.Enter) Then LoadWeb()
+        If GetAsyncKeyState(Keys.Enter) Then If GetAsyncKeyState(Keys.LControlKey) Then Return Else LoadWeb() : Exit Sub
         If GetAsyncKeyState(Keys.T) Then
             ToggleTimer()
             g_i = 0
@@ -187,7 +195,7 @@ Public Class coin
         Dim p = src.IndexOf(ScrapeEnd.Text, i)
         RichTextBox1.Text = " " + src.Substring(i, p - i)
 
-        RichTextBox1.Text = Regex.Replace(RichTextBox1.Text, ScrapeReplace.Text, ScrapeReplaceW.Text)
+        RichTextBox1.Text = " " + Regex.Replace(RichTextBox1.Text.Substring(1), ScrapeReplace.Text, ScrapeReplaceW.Text)
 
         Logo()
 
@@ -294,7 +302,8 @@ Public Class coin
                 vbNewLine + "Replace with:" + vbTab + vbTab + ScrapeReplaceW.Text +
                 vbNewLine + "Description:" + vbTab + vbTab + Description.Text +
                 vbNewLine + "Log count:" + vbTab + vbTab + Log.Lines.Count.ToString +
-                vbNewLine + vbNewLine + "DOUBLE_CLICK or ENTER:" + vbTab + "Run" +
+                vbNewLine + vbNewLine + "DOUBLE_CLICK or ENTER:" + vbTab + "Run scrape" +
+                vbNewLine + "CTRL + DOUBLE_CLICK:" + vbTab + "Toggle ReadOnly" +
                 vbNewLine + "T:" + vbTab + vbTab + vbTab + "Toggle timer on/off" + " (" + Timer1.Enabled.ToString + ", " + My.Settings.TimerFrequency.ToString + "ms)" +
                 vbNewLine + "UP/DOWN:" + vbTab + vbTab + "+/- Frequency (" + g_Frequency.ToString + ")" +
                 vbNewLine + "O (SHIFT):" + vbTab + vbTab + "Toggle options" +
@@ -313,13 +322,13 @@ Public Class coin
     End Sub
 
     Function CheckIfFocused() As Boolean
-        Return Description.Focused Or URL.Focused Or ScrapeAfter.Focused Or ScrapeBegin.Focused Or ScrapeEnd.Focused Or Log.Focused Or ScrapeReplace.Focused Or ScrapeReplaceW.Focused
+        Return RichTextBox1.ReadOnly = False Or Description.Focused Or URL.Focused Or ScrapeAfter.Focused Or ScrapeBegin.Focused Or ScrapeEnd.Focused Or Log.Focused Or ScrapeReplace.Focused Or ScrapeReplaceW.Focused
     End Function
 
     Private Sub RichTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyDown, URL.KeyDown, ScrapeEnd.KeyDown, ScrapeBegin.KeyDown, ScrapeAfter.KeyDown, Description.KeyDown, Log.KeyDown, ScrapeReplace.KeyDown, ScrapeReplaceW.KeyDown
         If GetAsyncKeyState(Keys.F1) Then F1_MessageBox()
         If CheckIfFocused() Then Exit Sub
-        GetAsyncKeyState(Keys.LShiftKey) : GetAsyncKeyState(Keys.LControlKey) : GetAsyncKeyState(Keys.D0) : GetAsyncKeyState(Keys.D1) : GetAsyncKeyState(Keys.D2) : GetAsyncKeyState(Keys.D3) : GetAsyncKeyState(Keys.D4) : GetAsyncKeyState(Keys.D5) : GetAsyncKeyState(Keys.D6) : GetAsyncKeyState(Keys.D7) : GetAsyncKeyState(Keys.D8) : GetAsyncKeyState(Keys.D9)
+        GetAsyncKeyState(Keys.LShiftKey) : GetAsyncKeyState(Keys.LControlKey) : GetAsyncKeyState(Keys.D0) : GetAsyncKeyState(Keys.D1) : GetAsyncKeyState(Keys.D2) : GetAsyncKeyState(Keys.D3) : GetAsyncKeyState(Keys.D4) : GetAsyncKeyState(Keys.D5) : GetAsyncKeyState(Keys.D6) : GetAsyncKeyState(Keys.D7) : GetAsyncKeyState(Keys.D8) : GetAsyncKeyState(Keys.D9) : GetAsyncKeyState(Keys.V) : GetAsyncKeyState(Keys.O) : GetAsyncKeyState(Keys.A) : GetAsyncKeyState(Keys.T) : GetAsyncKeyState(Keys.Up) : GetAsyncKeyState(Keys.Down) : GetAsyncKeyState(Keys.Escape) : GetAsyncKeyState(Keys.OemMinus) : GetAsyncKeyState(Keys.Oemplus) : GetAsyncKeyState(Keys.Enter)
         If GetAsyncKeyState(Keys.D0) Then Coloro(Color.Lime)
         If GetAsyncKeyState(Keys.D1) Then Coloro(Color.Red)
         If GetAsyncKeyState(Keys.D2) Then Coloro(Color.White)
@@ -339,7 +348,6 @@ Public Class coin
         End If
         If GetAsyncKeyState(Keys.LControlKey) Then Zoom()
     End Sub
-
     Sub Zoom()
         g_zoom = RichTextBox1.ZoomFactor
         Select Case g_zoom
@@ -356,9 +364,10 @@ Public Class coin
         Visible = False
         LoadSettings()
         LoadWeb()
+        RichTextBox1.Focus()
+        Zoom()
         Visible = True
         AppActivate(My.Settings.Title)
-        RichTextBox1.Focus()
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
@@ -397,5 +406,10 @@ Public Class coin
 
     Private Sub Log_MouseLeave(sender As Object, e As EventArgs) Handles Log.MouseLeave
         RichTextBox1.Focus()
+    End Sub
+
+    Private Sub RichTextBox1_LinkClicked(sender As Object, e As LinkClickedEventArgs) Handles RichTextBox1.LinkClicked
+        GetAsyncKeyState(Keys.LControlKey)
+        If GetAsyncKeyState(Keys.LControlKey) Then System.Diagnostics.Process.Start(e.LinkText)
     End Sub
 End Class
