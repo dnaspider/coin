@@ -300,6 +300,7 @@ Public Class coin
                 vbNewLine + "V:" + vbTab + vbTab + vbTab + "Position" +
                 vbNewLine + "+/-:" + vbTab + vbTab + vbTab + "Opacity" +
                 vbNewLine + "ESC:" + vbTab + vbTab + vbTab + "Exit" +
+                vbNewLine + "SHIFT + ESC:" + vbTab + vbTab + "Exit without saving" +
                 vbNewLine + "F1:" + vbTab + vbTab + vbTab + "?" +
                 vbNewLine + vbNewLine + "Settings:" + vbTab + vbTab + vbTab + "C:\Users\..\AppData\Local\coin\..\..\user.config" +
                 vbNewLine + "Reset:" + vbTab + vbTab + vbTab + "Delete coin folder (C:\Users\..\AppData\Local\coin)"
@@ -364,7 +365,8 @@ Public Class coin
     End Sub
 
     Private Sub coin_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        SaveSettings()
+        GetAsyncKeyState(Keys.LShiftKey)
+        If GetAsyncKeyState(Keys.LShiftKey) Then Return Else SaveSettings()
     End Sub
 
     Sub ToggleHyph(c As Control)
