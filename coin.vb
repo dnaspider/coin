@@ -118,8 +118,7 @@ Public Class coin
     End Sub
 
     Private Sub RichTextBox1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles RichTextBox1.MouseDoubleClick
-        GetAsyncKeyState(Keys.LControlKey)
-        If GetAsyncKeyState(Keys.LControlKey) Then ToggleReadOnly() : Exit Sub
+        GetAsyncKeyState(Keys.LControlKey) : If GetAsyncKeyState(Keys.LControlKey) Then ToggleReadOnly() : Exit Sub
 
         LoadWeb()
     End Sub
@@ -170,8 +169,7 @@ Public Class coin
     End Sub
 
     Sub LoadWeb()
-        GetAsyncKeyState(Keys.LShiftKey)
-        If GetAsyncKeyState(Keys.LShiftKey) Then Return
+        GetAsyncKeyState(Keys.LShiftKey) : If GetAsyncKeyState(Keys.LShiftKey) Then Return
 
         Dim src = ""
         Dim wrResponse As WebResponse
@@ -297,12 +295,12 @@ Public Class coin
                 vbNewLine + "Scrape after (IndexOf):" + vbTab + ScrapeAfter.Text +
                 vbNewLine + "Scrape begin:" + vbTab + vbTab + ScrapeBegin.Text +
                 vbNewLine + "Scrape end:" + vbTab + vbTab + ScrapeEnd.Text +
-                vbNewLine + "Hold SHIFT:" + vbTab + vbTab + "Bypass scrape" +
                 vbNewLine + "Regex replace:" + vbTab + vbTab + ScrapeReplace.Text +
                 vbNewLine + "Replace with:" + vbTab + vbTab + ScrapeReplaceW.Text +
                 vbNewLine + "Description:" + vbTab + vbTab + Description.Text +
                 vbNewLine + "Log count:" + vbTab + vbTab + Log.Lines.Count.ToString +
                 vbNewLine + vbNewLine + "DOUBLE_CLICK or ENTER:" + vbTab + "Run scrape" +
+                vbNewLine + "Hold SHIFT:" + vbTab + vbTab + "Bypass scrape" +
                 vbNewLine + "CTRL + DOUBLE_CLICK:" + vbTab + "Toggle ReadOnly" +
                 vbNewLine + "T:" + vbTab + vbTab + vbTab + "Toggle timer on/off" + " (" + Timer1.Enabled.ToString + ", " + My.Settings.TimerFrequency.ToString + "ms)" +
                 vbNewLine + "UP/DOWN:" + vbTab + vbTab + "+/- Frequency (" + g_Frequency.ToString + ")" +
@@ -378,11 +376,12 @@ Public Class coin
     End Sub
 
     Private Sub coin_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        GetAsyncKeyState(Keys.LShiftKey)
-        If GetAsyncKeyState(Keys.LShiftKey) Then Return Else SaveSettings()
+        GetAsyncKeyState(Keys.LShiftKey) : If GetAsyncKeyState(Keys.LShiftKey) Then Return Else SaveSettings()
     End Sub
 
     Sub ToggleHyph(c As Control)
+        GetAsyncKeyState(Keys.LControlKey) : If GetAsyncKeyState(Keys.LControlKey) Then Return
+
         If c.Text.StartsWith("'") Then c.Text = c.Text.Substring(1) Else c.Text = "'" + c.Text
     End Sub
 
@@ -395,8 +394,7 @@ Public Class coin
     End Sub
 
     Sub Key(key As Keys)
-        Keybd_event(key, 0, 1, 0)
-        Keybd_event(key, 0, 2, 0)
+        Keybd_event(key, 0, 1, 0) : Keybd_event(key, 0, 2, 0)
     End Sub
 
     Private Sub Log_MouseWheel(sender As Object, e As MouseEventArgs) Handles Log.MouseWheel
@@ -409,7 +407,6 @@ Public Class coin
     End Sub
 
     Private Sub RichTextBox1_LinkClicked(sender As Object, e As LinkClickedEventArgs) Handles RichTextBox1.LinkClicked
-        GetAsyncKeyState(Keys.LControlKey)
-        If GetAsyncKeyState(Keys.LControlKey) Then System.Diagnostics.Process.Start(e.LinkText)
+        GetAsyncKeyState(Keys.LControlKey) : If GetAsyncKeyState(Keys.LControlKey) Then System.Diagnostics.Process.Start(e.LinkText)
     End Sub
 End Class
