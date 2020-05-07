@@ -327,7 +327,7 @@ Public Class coin
         If GetAsyncKeyState(Keys.F1) Then F1_MessageBox()
         If CheckIfFocused() Then Exit Sub
         GetAsyncKeyState(Keys.LShiftKey) : GetAsyncKeyState(Keys.LControlKey) : GetAsyncKeyState(Keys.D0) : GetAsyncKeyState(Keys.D1) : GetAsyncKeyState(Keys.D2) : GetAsyncKeyState(Keys.D3) : GetAsyncKeyState(Keys.D4) : GetAsyncKeyState(Keys.D5) : GetAsyncKeyState(Keys.D6) : GetAsyncKeyState(Keys.D7) : GetAsyncKeyState(Keys.D8) : GetAsyncKeyState(Keys.D9) : GetAsyncKeyState(Keys.V) : GetAsyncKeyState(Keys.O) : GetAsyncKeyState(Keys.A) : GetAsyncKeyState(Keys.T) : GetAsyncKeyState(Keys.Up) : GetAsyncKeyState(Keys.Down) : GetAsyncKeyState(Keys.Escape) : GetAsyncKeyState(Keys.OemMinus) : GetAsyncKeyState(Keys.Oemplus) : GetAsyncKeyState(Keys.Enter)
-        If GetAsyncKeyState(Keys.D0) Then Coloro(Color.Lime)
+        If GetAsyncKeyState(Keys.D0) Then Coloro(My.Settings.Color_0) 'Lime
         If GetAsyncKeyState(Keys.D1) Then Coloro(Color.Red)
         If GetAsyncKeyState(Keys.D2) Then Coloro(Color.White)
         If GetAsyncKeyState(Keys.D3) Then Coloro(Color.Blue)

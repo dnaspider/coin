@@ -90,5 +90,8 @@
     <Setting Name="ScrapeReplaceW" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="Color_0" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">Lime</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

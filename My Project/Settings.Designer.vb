@@ -401,6 +401,18 @@ Namespace My
                 Me("ScrapeReplaceW") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Lime")>  _
+        Public Property Color_0() As Global.System.Drawing.Color
+            Get
+                Return CType(Me("Color_0"),Global.System.Drawing.Color)
+            End Get
+            Set
+                Me("Color_0") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
