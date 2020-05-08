@@ -98,6 +98,9 @@ Public Class coin
         My.Settings.ScrapeReplace = ScrapeReplace.Text
         My.Settings.ScrapeReplaceW = ScrapeReplaceW.Text
         My.Settings.LogDescription = My.Settings.LogDescription
+        My.Settings.Wav = My.Settings.Wav
+        My.Settings.ErrorWav = My.Settings.ErrorWav
+        My.Settings.SettingsPath = My.Settings.SettingsPath
     End Sub
 
     Sub DragFormInit()
@@ -186,6 +189,7 @@ Public Class coin
             If Width < 76 Then Width = 76
             Logo()
             g_i += 1
+            If My.Settings.ErrorWav > "" Then My.Computer.Audio.Play(My.Settings.ErrorWav)
             Exit Sub
         End Try
 
@@ -198,6 +202,8 @@ Public Class coin
         Logo()
 
         g_i += 1
+
+        If My.Settings.Wav > "" Then My.Computer.Audio.Play(My.Settings.Wav)
     End Sub
 
     Sub ToggleTimer()
@@ -312,6 +318,7 @@ Public Class coin
                 vbNewLine + "+/-:" + vbTab + vbTab + vbTab + "Opacity" +
                 vbNewLine + "ESC:" + vbTab + vbTab + vbTab + "Exit" +
                 vbNewLine + "SHIFT + ESC:" + vbTab + vbTab + "Exit without saving" +
+                vbNewLine + "F12:" + vbTab + vbTab + vbTab + "Settings" +
                 vbNewLine + "F1:" + vbTab + vbTab + vbTab + "?" +
                 vbNewLine + vbNewLine + "Settings:" + vbTab + vbTab + vbTab + "C:\Users\..\AppData\Local\coin\..\..\user.config" +
                 vbNewLine + "Reset:" + vbTab + vbTab + vbTab + "Delete coin folder (C:\Users\..\AppData\Local\coin)"
@@ -323,8 +330,61 @@ Public Class coin
         Return RichTextBox1.ReadOnly = False Or Description.Focused Or URL.Focused Or ScrapeAfter.Focused Or ScrapeBegin.Focused Or ScrapeEnd.Focused Or Log.Focused Or ScrapeReplace.Focused Or ScrapeReplaceW.Focused
     End Function
 
+    Sub Sleep(ms)
+        System.Threading.Thread.Sleep(ms)
+    End Sub
+
+    Sub Settings()
+        Keybd_event(Keys.LWin, 0, 1, 0)
+        Key(Keys.R)
+        Keybd_event(Keys.LWin, 0, 2, 0)
+        Sleep(150)
+        AppActivate("run")
+        If My.Settings.SettingsPath > "" Then
+            For i = 0 To My.Settings.SettingsPath.Length - 1
+                Kb(My.Settings.SettingsPath.Substring(i, 1))
+            Next
+            Key(Keys.Enter)
+        Else
+            Dim s = Application.LocalUserAppDataPath.ToString
+            s = s.Substring(0, s.IndexOf("\coin\") + 6)
+            For i = 0 To s.Length - 1
+                Kb(s.Substring(i, 1))
+            Next
+            Key(Keys.Enter)
+            Sleep(750)
+            AppActivate("coin")
+            Keybd_event(Keys.LMenu, 0, 0, 0)
+            Key(Keys.D)
+            Keybd_event(Keys.LMenu, 0, 2, 0)
+            Keybd_event(Keys.RShiftKey, 0, 1, 0)
+            For i = 1 To 4
+                Key(Keys.Tab)
+            Next
+            Keybd_event(Keys.RShiftKey, 0, 2, 0)
+            Key(Keys.End)
+            Key(Keys.Enter)
+            Sleep(750)
+            Keybd_event(Keys.LMenu, 0, 0, 0)
+            Key(Keys.D)
+            Keybd_event(Keys.LMenu, 0, 2, 0)
+            s = Application.ProductVersion + "\user.config\"
+            For i = 0 To s.Length - 1
+                Kb(s.Substring(i, 1))
+            Next
+            Key(Keys.Enter)
+            Sleep(750)
+            AppActivate("coin.exe_")
+            Keybd_event(Keys.LMenu, 0, 0, 0)
+            Key(Keys.Space)
+            Keybd_event(Keys.LMenu, 0, 2, 0)
+            Key(Keys.C)
+        End If
+    End Sub
+
     Private Sub RichTextBox1_KeyDown(sender As Object, e As KeyEventArgs) Handles RichTextBox1.KeyDown, URL.KeyDown, ScrapeEnd.KeyDown, ScrapeBegin.KeyDown, ScrapeAfter.KeyDown, Description.KeyDown, Log.KeyDown, ScrapeReplace.KeyDown, ScrapeReplaceW.KeyDown
         If GetAsyncKeyState(Keys.F1) Then F1_MessageBox()
+        If GetAsyncKeyState(Keys.F12) Then Settings()
         If CheckIfFocused() Then Exit Sub
         GetAsyncKeyState(Keys.LShiftKey) : GetAsyncKeyState(Keys.LControlKey) : GetAsyncKeyState(Keys.D0) : GetAsyncKeyState(Keys.D1) : GetAsyncKeyState(Keys.D2) : GetAsyncKeyState(Keys.D3) : GetAsyncKeyState(Keys.D4) : GetAsyncKeyState(Keys.D5) : GetAsyncKeyState(Keys.D6) : GetAsyncKeyState(Keys.D7) : GetAsyncKeyState(Keys.D8) : GetAsyncKeyState(Keys.D9) : GetAsyncKeyState(Keys.V) : GetAsyncKeyState(Keys.O) : GetAsyncKeyState(Keys.A) : GetAsyncKeyState(Keys.T) : GetAsyncKeyState(Keys.Up) : GetAsyncKeyState(Keys.Down) : GetAsyncKeyState(Keys.Escape) : GetAsyncKeyState(Keys.OemMinus) : GetAsyncKeyState(Keys.Oemplus) : GetAsyncKeyState(Keys.Enter)
         If GetAsyncKeyState(Keys.D0) Then Coloro(My.Settings.Color_0) 'Lime
@@ -395,6 +455,84 @@ Public Class coin
 
     Sub Key(key As Keys)
         Keybd_event(key, 0, 1, 0) : Keybd_event(key, 0, 2, 0)
+    End Sub
+
+    Sub Kb(c As String)
+        Select Case c
+            Case "0" : Key(Keys.D0)
+            Case "9" : Key(Keys.D9)
+            Case "8" : Key(Keys.D8)
+            Case "7" : Key(Keys.D7)
+            Case "6" : Key(Keys.D6)
+            Case "5" : Key(Keys.D5)
+            Case "4" : Key(Keys.D4)
+            Case "3" : Key(Keys.D3)
+            Case "2" : Key(Keys.D2)
+            Case "1" : Key(Keys.D1)
+            Case "a" : Key(Keys.A)
+            Case "b" : Key(Keys.B)
+            Case "c" : Key(Keys.C)
+            Case "d" : Key(Keys.D)
+            Case "e" : Key(Keys.E)
+            Case "f" : Key(Keys.F)
+            Case "g" : Key(Keys.G)
+            Case "h" : Key(Keys.H)
+            Case "i" : Key(Keys.I)
+            Case "j" : Key(Keys.J)
+            Case "k" : Key(Keys.K)
+            Case "l" : Key(Keys.L)
+            Case "m" : Key(Keys.M)
+            Case "n" : Key(Keys.N)
+            Case "o" : Key(Keys.O)
+            Case "p" : Key(Keys.P)
+            Case "q" : Key(Keys.Q)
+            Case "r" : Key(Keys.R)
+            Case "s" : Key(Keys.S)
+            Case "t" : Key(Keys.T)
+            Case "u" : Key(Keys.U)
+            Case "v" : Key(Keys.V)
+            Case "w" : Key(Keys.W)
+            Case "x" : Key(Keys.X)
+            Case "y" : Key(Keys.Y)
+            Case "z" : Key(Keys.Z)
+            Case "A" : Key(Keys.A)
+            Case "B" : Key(Keys.B)
+            Case "C" : Key(Keys.C)
+            Case "D" : Key(Keys.D)
+            Case "E" : Key(Keys.E)
+            Case "F" : Key(Keys.F)
+            Case "G" : Key(Keys.G)
+            Case "H" : Key(Keys.H)
+            Case "I" : Key(Keys.I)
+            Case "J" : Key(Keys.J)
+            Case "K" : Key(Keys.K)
+            Case "L" : Key(Keys.L)
+            Case "M" : Key(Keys.M)
+            Case "N" : Key(Keys.N)
+            Case "O" : Key(Keys.O)
+            Case "P" : Key(Keys.P)
+            Case "Q" : Key(Keys.Q)
+            Case "R" : Key(Keys.R)
+            Case "S" : Key(Keys.S)
+            Case "T" : Key(Keys.T)
+            Case "U" : Key(Keys.U)
+            Case "V" : Key(Keys.V)
+            Case "W" : Key(Keys.W)
+            Case "X" : Key(Keys.X)
+            Case "Y" : Key(Keys.Y)
+            Case "Z" : Key(Keys.Z)
+            Case "/" : Key(Keys.OemQuestion)
+            Case "." : Key(Keys.OemPeriod)
+            Case "_"
+                Keybd_event(Keys.RShiftKey, 0, 1, 0)
+                Key(Keys.OemMinus)
+                Keybd_event(Keys.RShiftKey, 0, 2, 0)
+            Case "\" : Key(Keys.OemBackslash)
+            Case ":"
+                Keybd_event(Keys.RShiftKey, 0, 1, 0)
+                Key(Keys.OemSemicolon)
+                Keybd_event(Keys.RShiftKey, 0, 2, 0)
+        End Select
     End Sub
 
     Private Sub Log_MouseWheel(sender As Object, e As MouseEventArgs) Handles Log.MouseWheel

@@ -413,6 +413,42 @@ Namespace My
                 Me("Color_0") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property Wav() As String
+            Get
+                Return CType(Me("Wav"),String)
+            End Get
+            Set
+                Me("Wav") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property ErrorWav() As String
+            Get
+                Return CType(Me("ErrorWav"),String)
+            End Get
+            Set
+                Me("ErrorWav") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property SettingsPath() As String
+            Get
+                Return CType(Me("SettingsPath"),String)
+            End Get
+            Set
+                Me("SettingsPath") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

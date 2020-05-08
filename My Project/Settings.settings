@@ -93,5 +93,14 @@
     <Setting Name="Color_0" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Lime</Value>
     </Setting>
+    <Setting Name="Wav" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ErrorWav" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SettingsPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
