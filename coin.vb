@@ -48,11 +48,6 @@ Public Class coin
         CopyColoro()
         If FormBorderStyle = BorderStyle.None Then Label1.Top = Me.Height - 1 : ToggleOptionsV(False) Else Label1.Top = Me.Height - 40
         RichTextBox1.Width = Me.Width - RichTextBox1.Left
-        If My.Settings.FirstRun = True Then
-            F1_MessageBox()
-            SaveSettings()
-            Application.Restart()
-        End If
     End Sub
 
     Sub CopyColoro()
@@ -426,6 +421,12 @@ Public Class coin
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Visible = False
         LoadSettings()
+        If My.Settings.FirstRun = True Then
+            SaveSettings()
+            F1_MessageBox()
+            Application.Restart()
+            Close()
+        End If
         LoadWeb()
         Zoom()
         Visible = True
