@@ -318,7 +318,7 @@ Public Class coin
                 vbNewLine + "V:" + vbTab + vbTab + vbTab + "Position" +
                 vbNewLine + "+/-:" + vbTab + vbTab + vbTab + "Opacity" +
                 vbNewLine + "ESC (SHIFT):" + vbTab + vbTab + "Exit (Restart)" +
-                vbNewLine + "SHIFT + ESC:" + vbTab + vbTab + "Exit without saving" +
+                vbNewLine + "SHIFT + Close:" + vbTab + vbTab + "Exit without saving" +
                 vbNewLine + "F12:" + vbTab + vbTab + vbTab + "Settings" +
                 vbNewLine + "F1:" + vbTab + vbTab + vbTab + "?" +
                 vbNewLine + vbNewLine + "Settings:" + vbTab + vbTab + vbTab + "C:\Users\..\AppData\Local\coin\..\..\user.config" +
