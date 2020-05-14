@@ -48,7 +48,11 @@ Public Class coin
         CopyColoro()
         If FormBorderStyle = BorderStyle.None Then Label1.Top = Me.Height - 1 : ToggleOptionsV(False) Else Label1.Top = Me.Height - 40
         RichTextBox1.Width = Me.Width - RichTextBox1.Left
-        If My.Settings.FirstRun = True Then F1_MessageBox()
+        If My.Settings.FirstRun = True Then
+            F1_MessageBox()
+            SaveSettings()
+            Application.Restart()
+        End If
     End Sub
 
     Sub CopyColoro()
@@ -169,6 +173,7 @@ Public Class coin
         End If
         If GetAsyncKeyState(Keys.Oemplus) Then Opacity += 0.1
         If GetAsyncKeyState(Keys.OemMinus) Then Opacity -= 0.1
+        If GetAsyncKeyState(Keys.Escape) Then If GetAsyncKeyState(Keys.LShiftKey) Then Application.Restart() Else Me.Close()
     End Sub
 
     Sub LoadWeb()
@@ -203,6 +208,7 @@ Public Class coin
 
         g_i += 1
 
+        'My.Settings.Save()
         If My.Settings.Wav > "" Then My.Computer.Audio.Play(My.Settings.Wav)
     End Sub
 
@@ -246,7 +252,7 @@ Public Class coin
     End Sub
 
     Sub Logo()
-        If Log.Text = "" Or Log.Text.StartsWith("'") Then Return
+        If Log.Text.StartsWith("'") Then Return
 
         Dim logDesc = ""
         If My.Settings.LogDescription And Description.Text > "" Then logDesc = " " + Description.Text
@@ -290,7 +296,7 @@ Public Class coin
                 s = "Scrape end: IndexOf(""" + ScrapeEnd.Text + """)"
             Case 6
                 s = "Log (" + Log.Lines.Count.ToString + ")" + vbNewLine + vbNewLine +
-                    "Clear text or 'text:" + vbTab + "Disable" + vbNewLine +
+                    "'Text:" + vbTab + vbTab + "Disable" + vbNewLine +
                     "DOUBLE_CLICK:" + vbTab + "Toggle '"
             Case 7
                 Dim r = ""
@@ -316,7 +322,7 @@ Public Class coin
                 vbNewLine + "A:" + vbTab + vbTab + vbTab + "Toggle always on top" +
                 vbNewLine + "V:" + vbTab + vbTab + vbTab + "Position" +
                 vbNewLine + "+/-:" + vbTab + vbTab + vbTab + "Opacity" +
-                vbNewLine + "ESC:" + vbTab + vbTab + vbTab + "Exit" +
+                vbNewLine + "ESC (SHIFT):" + vbTab + vbTab + "Exit (Restart)" +
                 vbNewLine + "SHIFT + ESC:" + vbTab + vbTab + "Exit without saving" +
                 vbNewLine + "F12:" + vbTab + vbTab + vbTab + "Settings" +
                 vbNewLine + "F1:" + vbTab + vbTab + vbTab + "?" +
@@ -388,7 +394,7 @@ Public Class coin
         If CheckIfFocused() Then Exit Sub
         GetAsyncKeyState(Keys.LShiftKey) : GetAsyncKeyState(Keys.LControlKey) : GetAsyncKeyState(Keys.D0) : GetAsyncKeyState(Keys.D1) : GetAsyncKeyState(Keys.D2) : GetAsyncKeyState(Keys.D3) : GetAsyncKeyState(Keys.D4) : GetAsyncKeyState(Keys.D5) : GetAsyncKeyState(Keys.D6) : GetAsyncKeyState(Keys.D7) : GetAsyncKeyState(Keys.D8) : GetAsyncKeyState(Keys.D9) : GetAsyncKeyState(Keys.V) : GetAsyncKeyState(Keys.O) : GetAsyncKeyState(Keys.A) : GetAsyncKeyState(Keys.T) : GetAsyncKeyState(Keys.Up) : GetAsyncKeyState(Keys.Down) : GetAsyncKeyState(Keys.Escape) : GetAsyncKeyState(Keys.OemMinus) : GetAsyncKeyState(Keys.Oemplus) : GetAsyncKeyState(Keys.Enter)
         If GetAsyncKeyState(Keys.D0) Then Coloro(My.Settings.Color_0) 'Lime
-        If GetAsyncKeyState(Keys.D1) Then Coloro(Color.Red)
+        If GetAsyncKeyState(Keys.D1) Then Coloro(My.Settings.Color_1) 'Red
         If GetAsyncKeyState(Keys.D2) Then Coloro(Color.White)
         If GetAsyncKeyState(Keys.D3) Then Coloro(Color.Blue)
         If GetAsyncKeyState(Keys.D4) Then Coloro(Color.Black)
@@ -399,7 +405,6 @@ Public Class coin
         If GetAsyncKeyState(Keys.D9) Then Coloro(Color.Purple)
         If GetAsyncKeyState(Keys.Up) Then g_Frequency += 1
         If GetAsyncKeyState(Keys.Down) Then g_Frequency -= 1
-        If GetAsyncKeyState(Keys.Escape) Then Me.Close()
         If GetAsyncKeyState(Keys.V) Then
             Top = Cursor.Position.Y - Me.Height
             Left = Cursor.Position.X - Me.Width
@@ -426,6 +431,7 @@ Public Class coin
         Visible = True
         RichTextBox1.Focus()
         AppActivate(My.Settings.Title)
+        GetAsyncKeyState(Keys.Escape)
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
