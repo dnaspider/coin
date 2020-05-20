@@ -56,7 +56,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("C:\Users\dnasp\Desktop\index.html")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute(".\index.html")>  _
         Public Property URL() As String
             Get
                 Return CType(Me("URL"),String)

@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="URL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Users\dnasp\Desktop\index.html</Value>
+      <Value Profile="(Default)">.\index.html</Value>
     </Setting>
     <Setting Name="ScrapeAfter" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
