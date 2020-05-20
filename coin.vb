@@ -264,7 +264,7 @@ Public Class coin
         Dim t = hh & ":" & mi & ":" & s & ":" & m
         Dim d = Date.Now.Month.ToString & "/" & Date.Now.Day.ToString & "/" & Date.Now.Year.ToString
 
-        Log.AppendText(d & " " & t & logDesc & RichTextBox1.Text & vbCrLf)
+        If RichTextBox1.Text > "" Then Log.AppendText(d & " " & t & logDesc & RichTextBox1.Text & vbCrLf)
     End Sub
 
     Sub F1_MessageBox()
@@ -421,18 +421,18 @@ Public Class coin
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
         Visible = False
         LoadSettings()
-        If My.Settings.FirstRun = True Then
-            SaveSettings()
-            F1_MessageBox()
-            Application.Restart()
-            Close()
-        End If
+        If My.Settings.FirstRun Then F1_MessageBox()
+        If My.Settings.FirstRun = True Then GoTo ex
         LoadWeb()
         Zoom()
         Visible = True
         RichTextBox1.Focus()
         AppActivate(My.Settings.Title)
         GetAsyncKeyState(Keys.Escape)
+        Exit Sub
+ex:
+        SaveSettings()
+        Application.Restart()
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick

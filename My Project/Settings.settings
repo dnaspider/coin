@@ -3,13 +3,13 @@
   <Profiles />
   <Settings>
     <Setting Name="URL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://www.coinbase.com/</Value>
+      <Value Profile="(Default)">C:\Users\dnasp\Desktop\index.html</Value>
     </Setting>
     <Setting Name="ScrapeAfter" Type="System.String" Scope="User">
-      <Value Profile="(Default)">BTC&lt;/h4&gt;</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ScrapeBegin" Type="System.String" Scope="User">
-      <Value Profile="(Default)">$</Value>
+      <Value Profile="(Default)">&gt;</Value>
     </Setting>
     <Setting Name="ScrapeEnd" Type="System.String" Scope="User">
       <Value Profile="(Default)">&lt;</Value>
@@ -21,7 +21,7 @@
       <Value Profile="(Default)">333</Value>
     </Setting>
     <Setting Name="Zoom" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)">2.5</Value>
     </Setting>
     <Setting Name="TextColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Red</Value>
@@ -39,28 +39,28 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Top" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">250</Value>
     </Setting>
     <Setting Name="Left" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">250</Value>
     </Setting>
     <Setting Name="Height" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">15</Value>
+      <Value Profile="(Default)">415</Value>
     </Setting>
     <Setting Name="Width" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">61</Value>
+      <Value Profile="(Default)">261</Value>
     </Setting>
     <Setting Name="TimerEnabled" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="MiscZoomLeft" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">-3</Value>
     </Setting>
     <Setting Name="Description" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Get BTC price</Value>
+      <Value Profile="(Default)">Note</Value>
     </Setting>
     <Setting Name="Sizeable" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="Title" Type="System.String" Scope="User">
       <Value Profile="(Default)">coin</Value>
@@ -85,7 +85,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="ScrapeReplace" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">&gt;</Value>
     </Setting>
     <Setting Name="ScrapeReplaceW" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
